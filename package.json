@@ -1,5 +1,5 @@
 {
-  "name": "frontend-coding-test-ts",
+  "name": "@zammad-coding-test/frontend",
   "private": true,
   "version": "0.0.0",
   "scripts": {
