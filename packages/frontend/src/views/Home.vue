@@ -16,7 +16,7 @@ const toggleExerciseVisibility = (exercise: keyof (typeof exerciseVisibilityStat
 
 <template>
   <div class="mt-10 max-w-md justify-center">
-    <h1 class="tracking-tigh text-3xl font-extrabold leading-10">Ready for the challenge?</h1>
+    <h1 class="text-3xl font-extrabold leading-10 tracking-tight">Ready for the challenge?</h1>
     <div class="mt-8">
       <section>
         <h2 class="text-2xl font-bold leading-6">Exercise 1</h2>
@@ -81,7 +81,7 @@ const toggleExerciseVisibility = (exercise: keyof (typeof exerciseVisibilityStat
           </p>
           <p>
             For example you can show a toast after something was fetched from the public API (which you implemented
-            before) or also in error situtations.
+            before) or also in error situations.
           </p>
         </div>
         <div class="mt-5">
