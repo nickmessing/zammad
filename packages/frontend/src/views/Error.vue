@@ -1,10 +1,3 @@
-<template>
-  <div>
-    <h1>{{ `Error - ${statusCode}` }}</h1>
-    <p>{{ message }}</p>
-  </div>
-</template>
-
 <script setup lang="ts">
 interface Props {
   title?: string
@@ -18,3 +11,10 @@ withDefaults(defineProps<Props>(), {
   statusCode: 404,
 })
 </script>
+
+<template>
+  <div>
+    <h1>{{ `Error - ${statusCode}` }}</h1>
+    <p>{{ message }}</p>
+  </div>
+</template>
