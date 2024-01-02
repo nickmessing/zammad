@@ -2,8 +2,8 @@ import type { App } from 'vue'
 import {
   createRouter,
   createWebHistory,
-  Router,
-  RouteRecordRaw,
+  type Router,
+  type RouteRecordRaw,
 } from 'vue-router'
 import LayoutMain from '../components/layout/LayoutMain.vue'
 import Error from '../views/Error.vue'
