@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { ref } from 'vue'
 
-import { ShowExercises } from '../types/exercise'
-
-const showExercise = reactive<ShowExercises>({
+const exerciseVisibilityState = ref({
   second: false,
   third: false,
 })
 
-const showNextExercise = (exercise: keyof ShowExercises) => {
-  showExercise[exercise] = !showExercise[exercise]
+const toggleExerciseVisibility = (exercise: keyof (typeof exerciseVisibilityState)['value']) => {
+  exerciseVisibilityState.value = {
+    ...exerciseVisibilityState.value,
+    [exercise]: !exerciseVisibilityState.value[exercise],
+  }
 }
 </script>
 
@@ -66,12 +67,12 @@ const showNextExercise = (exercise: keyof ShowExercises) => {
           -
         </div>
         <div class="mt-5">
-          <a class="cursor-pointer text-blue-600 hover:text-blue-800" @click="showNextExercise('second')">{{
-            showExercise.second ? 'Hide the next exercise' : 'Show the next exercise'
-          }}</a>
+          <a class="cursor-pointer text-blue-600 hover:text-blue-800" @click="toggleExerciseVisibility('second')">
+            {{ exerciseVisibilityState.second ? 'Hide the next exercise' : 'Show the next exercise' }}
+          </a>
         </div>
       </section>
-      <section v-if="showExercise.second" class="mt-10">
+      <section v-if="exerciseVisibilityState.second" class="mt-10">
         <h2 class="text-2xl font-bold leading-6">Exercise 2</h2>
         <div class="mt-5">
           <p>
@@ -84,12 +85,12 @@ const showNextExercise = (exercise: keyof ShowExercises) => {
           </p>
         </div>
         <div class="mt-5">
-          <a class="cursor-pointer text-blue-600 hover:text-blue-800" @click="showNextExercise('third')">{{
-            showExercise.third ? 'Hide the next exercise' : 'Show the next exercise'
-          }}</a>
+          <a class="cursor-pointer text-blue-600 hover:text-blue-800" @click="toggleExerciseVisibility('third')">
+            {{ exerciseVisibilityState.third ? 'Hide the next exercise' : 'Show the next exercise' }}
+          </a>
         </div>
       </section>
-      <section v-if="showExercise.third" class="mt-10">
+      <section v-if="exerciseVisibilityState.third" class="mt-10">
         <h2 class="text-2xl font-bold leading-6">Exercise 3</h2>
         <div class="mt-5">
           <p>
