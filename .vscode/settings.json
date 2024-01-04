@@ -25,5 +25,6 @@
     "editor.formatOnSave": false
   },
   "vue.complete.casing.props": "camel",
-  "vue.complete.casing.tags": "pascal"
+  "vue.complete.casing.tags": "pascal",
+  "cSpell.words": ["Codegen", "datetime", "rushstack", "Upsert", "zammad"]
 }

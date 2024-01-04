@@ -1,0 +1,29 @@
+type TicketComment {
+  id: ID!
+  author: User!
+  comment: String!
+  ticket: Ticket!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type TicketCommentConnection {
+  items: [TicketComment!]!
+  totalCount: Int!
+  endCursor: String
+}
+
+input CreateTicketCommentInput {
+  id: ID!
+  comment: String!
+}
+
+type TicketCommentMutation {
+  update(comment: String!): TicketComment!
+  remove: Boolean!
+}
+
+type TicketMutation {
+  createComment(input: CreateTicketCommentInput!): TicketComment!
+  comment(id: ID!): TicketCommentMutation!
+}

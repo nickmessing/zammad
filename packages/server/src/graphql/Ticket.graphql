@@ -1,0 +1,45 @@
+type Ticket {
+  id: ID!
+  title: String!
+  description: String!
+  status: TicketStatus!
+  author: User!
+  assignee: User
+  comments(first: Int!, after: String): TicketCommentConnection!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type TicketConnection {
+  items: [Ticket!]!
+  totalCount: Int!
+  endCursor: String
+}
+
+input CreateTicketInput {
+  id: ID!
+  title: String!
+  description: String!
+  statusId: String!
+}
+
+input UpdateTicketInput {
+  title: String
+  description: String
+  statusId: String
+}
+
+type TicketMutation {
+  update(input: UpdateTicketInput!): Ticket!
+  remove: Boolean!
+}
+
+type Query {
+  tickets(first: Int!, after: String): TicketConnection!
+  ticket(id: ID!): Ticket
+}
+
+type Mutation {
+  createTicket(input: CreateTicketInput!): Ticket!
+  ticket(id: ID!): TicketMutation!
+}

@@ -1,0 +1,40 @@
+type TicketStatus {
+  id: ID!
+  name: String!
+  description: String!
+  colorBase: ColorBase!
+  order: Int!
+  tickets(first: Int!, after: String): TicketConnection!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input CreateTicketStatusInput {
+  id: ID!
+  name: String!
+  description: String!
+  colorBase: ColorBaseInput!
+  order: Int!
+}
+
+input UpdateTicketStatusInput {
+  name: String
+  description: String
+  colorBase: ColorBaseInput
+  order: Int
+}
+
+type TicketStatusMutation {
+  update(input: UpdateTicketStatusInput!): TicketStatus!
+  remove: Boolean!
+}
+
+type Query {
+  ticketStatuses: [TicketStatus!]!
+  ticketStatus(id: ID!): TicketStatus
+}
+
+type Mutation {
+  createTicketStatus(input: CreateTicketStatusInput!): TicketStatus!
+  ticketStatus(id: ID!): TicketStatusMutation!
+}

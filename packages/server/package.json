@@ -1,0 +1,46 @@
+{
+  "name": "@zammad-coding-test/server",
+  "private": true,
+  "type": "module",
+  "main": "src/main.ts",
+  "scripts": {
+    "generate:graphql:codegen": "graphql-codegen-esm",
+    "generate:graphql:lint": "pnpm run lint:path -- src/generated/graphql.ts",
+    "generate:graphql": "run-s generate:graphql:codegen generate:graphql:lint",
+    "generate:drizzle": "drizzle-kit generate:pg",
+    "generate": "run-p generate:graphql generate:drizzle",
+    "lint:path": "eslint --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint": "pnpm run lint:path -- .",
+    "dev:generate:graphql": "nodemon --config nodemon.graphql.json",
+    "dev:generate:drizzle": "nodemon --config nodemon.drizzle.json",
+    "dev:generate": "run-p -l dev:generate:graphql dev:generate:drizzle",
+    "dev:server": "nodemon --config nodemon.server.json",
+    "dev": "run-p -l dev:server dev:generate"
+  },
+  "devDependencies": {
+    "@graphql-codegen/add": "^5.0.0",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-resolvers": "^4.0.1",
+    "@tsconfig/node20": "^20.1.2",
+    "@types/node": "^20.10.6",
+    "@zammad-coding-test/eslint-config-standards": "workspace:*",
+    "drizzle-kit": "^0.20.9",
+    "nodemon": "^3.0.2",
+    "tsx": "^4.7.0",
+    "type-fest": "^4.9.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.10.0",
+    "@faker-js/faker": "^8.3.1",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "dotenv": "^16.3.1",
+    "drizzle-orm": "^0.29.3",
+    "graphql": "^16.8.1",
+    "graphql-scalars": "^1.22.4",
+    "jose": "^5.2.0",
+    "postgres": "^3.4.3",
+    "zod": "^3.22.4"
+  }
+}

@@ -1,0 +1,24 @@
+type User {
+  id: ID!
+  username: String!
+  displayName: String!
+  createdTickets(first: Int!, after: String): TicketConnection!
+  assignedTickets(first: Int!, after: String): TicketConnection!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AuthenticationResponse {
+  user: User!
+  token: String!
+}
+
+type Query {
+  user(id: ID!): User
+  me: User
+}
+
+type Mutation {
+  authenticate(username: String!): AuthenticationResponse!
+  updateDisplayName(displayName: String!): AuthenticationResponse!
+}

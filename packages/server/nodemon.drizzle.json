@@ -1,0 +1,5 @@
+{
+  "exec": "pnpm generate:drizzle",
+  "watch": ["db/"],
+  "ext": "ts"
+}

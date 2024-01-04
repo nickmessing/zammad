@@ -1,0 +1,11 @@
+scalar DateTime
+
+type ColorBase {
+  hue: Int!
+  saturation: Int!
+}
+
+input ColorBaseInput {
+  hue: Int!
+  saturation: Int!
+}

@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1704379468339,
+      "tag": "0000_flaky_hobgoblin",
+      "breakpoints": true
+    }
+  ]
+}

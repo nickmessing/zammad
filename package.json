@@ -2,7 +2,13 @@
   "name": "zammad-coding-test",
   "author": "Nicolai Moraru <ceo@nickmessing.com>",
   "license": "UNLICENSED",
+  "scripts": {
+    "dev:frontend": "cd packages/frontend && pnpm dev",
+    "dev:server": "cd packages/server && pnpm dev",
+    "dev": "run-p -l dev:*"
+  },
   "devDependencies": {
+    "npm-run-all2": "^6.1.1",
     "prettier": "^3.1.1",
     "prettier-plugin-tailwindcss": "^0.5.10"
   }

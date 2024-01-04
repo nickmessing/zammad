@@ -7,6 +7,7 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
+    'plugin:unicorn/recommended',
     'plugin:vue/vue3-recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     '@vue/typescript/recommended',
@@ -112,7 +113,8 @@ module.exports = {
           'CONDITIONALS',
           'RENDER_MODIFIERS',
           'GLOBAL',
-          'UNIQUE', 'SLOT',
+          'UNIQUE',
+          'SLOT',
           'TWO_WAY_BINDING',
           'OTHER_DIRECTIVES',
           'ATTR_DYNAMIC',
@@ -132,5 +134,7 @@ module.exports = {
         },
       },
     ],
+    '@typescript-eslint/consistent-type-imports': 'error',
+    'unicorn/filename-case': 'off',
   },
 }
