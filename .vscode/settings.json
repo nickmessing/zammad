@@ -4,7 +4,6 @@
     "source.fixAll": "explicit"
   },
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
-  "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
@@ -26,5 +25,12 @@
   },
   "vue.complete.casing.props": "camel",
   "vue.complete.casing.tags": "pascal",
-  "cSpell.words": ["Codegen", "datetime", "rushstack", "Upsert", "zammad"]
+  "cSpell.words": [
+    "Codegen",
+    "datetime",
+    "Pinia",
+    "rushstack",
+    "Upsert",
+    "zammad"
+  ]
 }

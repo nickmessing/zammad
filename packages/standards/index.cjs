@@ -136,5 +136,13 @@ module.exports = {
     ],
     '@typescript-eslint/consistent-type-imports': 'error',
     'unicorn/filename-case': 'off',
+    'unicorn/prevent-abbreviations': [
+      'error',
+      {
+        allowList: {
+          props: true,
+        },
+      },
+    ],
   },
 }

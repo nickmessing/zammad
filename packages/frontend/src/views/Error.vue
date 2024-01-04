@@ -1,11 +1,11 @@
 <script setup lang="ts">
-interface Props {
+interface Properties {
   title?: string
   message?: string
   statusCode?: number
 }
 
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Properties>(), {
   title: 'Not Found',
   message: "We're sorry, but this page doesn't exist.",
   statusCode: 404,
