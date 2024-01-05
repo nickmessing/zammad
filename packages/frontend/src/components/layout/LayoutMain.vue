@@ -11,7 +11,6 @@ import Alerts from '../specific/Alerts.vue'
 const router = useRouter()
 const { result, loading } = useMeQuery()
 
-// const isAuthenticated = computed(() => !loading.value && result.value?.me)
 const isNotAuthenticated = computed(() => !loading.value && !result.value?.me)
 
 function logout() {
@@ -33,8 +32,8 @@ function logout() {
             <div class="flex gap-3">
               <Button :to="{ name: 'Home' }" theme="nav" isActiveClassOnExactMatch> Home </Button>
               <Button v-if="isNotAuthenticated" :to="{ name: 'Authenticate' }" theme="nav"> Authenticate </Button>
-              <template v-else>
-                <Button :to="{ name: 'Profile' }" theme="nav"> Profile </Button>
+              <template v-else-if="result?.me">
+                <Button :to="{ name: 'User', params: { id: result.me.id } }" theme="nav"> Profile </Button>
                 <Button theme="nav" @click="logout"> Logout </Button>
               </template>
             </div>

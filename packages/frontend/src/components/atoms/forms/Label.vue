@@ -6,8 +6,8 @@ const slots = defineSlots<{
 </script>
 
 <template>
-  <label class="flex cursor-pointer flex-col items-start gap-2">
-    <span v-if="slots.label" class="text-md">
+  <label class="group flex cursor-pointer select-none flex-col items-start gap-2">
+    <span v-if="slots.label" class="text-base">
       <slot name="label" />
     </span>
     <slot />

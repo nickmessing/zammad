@@ -3,3 +3,9 @@ mutation Authenticate($username: String!) {
     token
   }
 }
+
+mutation UpdateDisplayName($displayName: String!) {
+  updateDisplayName(displayName: $displayName) {
+    token
+  }
+}

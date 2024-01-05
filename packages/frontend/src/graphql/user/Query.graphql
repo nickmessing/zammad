@@ -4,3 +4,11 @@ query Me {
     username
   }
 }
+
+query User($id: ID!) {
+  user(id: $id) {
+    id
+    username
+    displayName
+  }
+}

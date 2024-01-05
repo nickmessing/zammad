@@ -68,7 +68,7 @@ module.exports = {
           lang: 'ts',
         },
         style: {
-          lang: 'css',
+          lang: 'less',
         },
       },
     ],

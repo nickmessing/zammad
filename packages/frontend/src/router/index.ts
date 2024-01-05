@@ -4,6 +4,7 @@ import LayoutMain from '../components/layout/LayoutMain.vue'
 import Authenticate from '../views/Authenticate.vue'
 import Error from '../views/Error.vue'
 import Home from '../views/Home.vue'
+import User from '../views/User.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -29,9 +30,9 @@ export const router = createRouter({
           component: Authenticate,
         },
         {
-          path: 'profile',
-          name: 'Profile',
-          component: Authenticate,
+          path: 'user/:id',
+          name: 'User',
+          component: User,
         },
       ],
     },

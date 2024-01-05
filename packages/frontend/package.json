@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.8",
+    "@mdi/js": "^7.4.47",
     "@paralleldrive/cuid2": "^2.2.2",
     "@vue/apollo-composable": "4.0.0-beta.12",
     "@vueuse/core": "^10.7.1",
@@ -53,6 +54,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.19.2",
     "jsdom": "^23.0.1",
+    "less": "^4.2.0",
     "nodemon": "^3.0.2",
     "npm-run-all2": "^6.1.1",
     "postcss": "^8.4.32",

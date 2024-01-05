@@ -1,0 +1,114 @@
+<script setup lang="ts">
+import { mdiKeyboardReturn, mdiKeyboardEsc } from '@mdi/js'
+import { computed, ref, watch } from 'vue'
+
+import { authorizationToken } from '@/apollo/links/authorization'
+import Icon from '@/components/atoms/common/Icon.vue'
+import KeyboardButton from '@/components/atoms/common/KeyboardButton.vue'
+import Label from '@/components/atoms/forms/Label.vue'
+import TextInput from '@/components/atoms/forms/TextInput.vue'
+import Avatar from '@/components/core/user/Avatar.vue'
+import { useMeQuery, useUpdateDisplayNameMutation, useUserQuery } from '@/generated/graphql'
+
+const props = defineProps<{
+  id: string
+}>()
+
+const displayName = ref('')
+const isDisplayNameFocused = ref(false)
+
+const { result: userQueryResult, loading: isUserQueryLoading } = useUserQuery(() => ({
+  id: props.id,
+}))
+const { result: meQueryResult, loading: isMeQueryLoading } = useMeQuery()
+
+const {
+  mutate: updateDisplayName,
+  loading: isUpdateDisplayNameMutationLoading,
+  onDone,
+} = useUpdateDisplayNameMutation(() => ({
+  variables: {
+    displayName: displayName.value,
+  },
+}))
+onDone(({ data }) => {
+  const newToken = data?.updateDisplayName?.token
+
+  if (!newToken) {
+    return
+  }
+
+  authorizationToken.value = newToken
+})
+
+const isKeyboardInstructionVisible = computed(
+  () =>
+    isDisplayNameFocused.value &&
+    !isUserQueryLoading.value &&
+    !isMeQueryLoading.value &&
+    userQueryResult.value?.user?.displayName !== displayName.value,
+)
+const isDisplayNameInputDisabled = computed(
+  () =>
+    isUserQueryLoading.value ||
+    isMeQueryLoading.value ||
+    isUpdateDisplayNameMutationLoading.value ||
+    userQueryResult.value?.user?.id !== meQueryResult.value?.me?.id,
+)
+
+watch(
+  () => userQueryResult.value?.user?.displayName,
+  value => {
+    displayName.value = value ?? ''
+  },
+  { immediate: true },
+)
+
+function resetDisplayName() {
+  displayName.value = userQueryResult.value?.user?.displayName ?? ''
+}
+function saveDisplayName() {
+  void updateDisplayName()
+}
+</script>
+
+<template>
+  <Avatar :id="id" :size="320" />
+
+  <div class="flex flex-col gap-4">
+    <Label>
+      <template #label> Username </template>
+      <TextInput :modelValue="userQueryResult?.user?.username ?? ''" name="username" isDisabled />
+    </Label>
+
+    <Label>
+      <template #label> Display Name </template>
+      <TextInput
+        v-model="displayName"
+        :isDisabled="isDisplayNameInputDisabled"
+        name="displayName"
+        @focus="() => (isDisplayNameFocused = true)"
+        @blur="() => (isDisplayNameFocused = false)"
+        @keydown.esc="resetDisplayName"
+        @keydown.enter="saveDisplayName"
+      />
+
+      <Transition name="fade-and-slide">
+        <div v-if="isKeyboardInstructionVisible" class="flex flex-row gap-8 text-lg text-gray-700">
+          <div class="flex flex-row items-center gap-2">
+            <KeyboardButton>
+              <Icon :path="mdiKeyboardReturn" :size="20" />
+            </KeyboardButton>
+            <div>Save</div>
+          </div>
+          <div class="flex flex-row items-center gap-2">
+            <KeyboardButton>
+              <Icon :path="mdiKeyboardEsc" :size="20" />
+            </KeyboardButton>
+            <div>Cancel</div>
+          </div>
+        </div>
+      </Transition>
+    </Label>
+  </div>
+</template>

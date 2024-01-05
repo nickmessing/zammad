@@ -7,20 +7,17 @@ import Button from '@/components/atoms/common/Button.vue'
 import Heading from '@/components/atoms/common/Heading.vue'
 import Label from '@/components/atoms/forms/Label.vue'
 import TextInput from '@/components/atoms/forms/TextInput.vue'
-import { useRegisterErrorHandler } from '@/composables/useRegisterErrorHandler'
 import { useAuthenticateMutation } from '@/generated/graphql'
 
 const router = useRouter()
 
 const username = ref('')
 
-const { mutate, loading, onDone, onError } = useAuthenticateMutation(() => ({
+const { mutate, loading, onDone } = useAuthenticateMutation(() => ({
   variables: {
     username: username.value,
   },
 }))
-
-useRegisterErrorHandler(onError)
 
 onDone(({ data }) => {
   if (data?.authenticate?.token) {

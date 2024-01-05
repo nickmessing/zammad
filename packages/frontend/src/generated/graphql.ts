@@ -262,9 +262,27 @@ export type AuthenticateMutation = {
   authenticate: { __typename?: 'AuthenticationResponse'; token: string }
 }
 
+export type UpdateDisplayNameMutationVariables = Exact<{
+  displayName: Scalars['String']['input']
+}>
+
+export type UpdateDisplayNameMutation = {
+  __typename?: 'Mutation'
+  updateDisplayName: { __typename?: 'AuthenticationResponse'; token: string }
+}
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>
 
 export type MeQuery = { __typename?: 'Query'; me?: { __typename?: 'User'; id: string; username: string } | null }
+
+export type UserQueryVariables = Exact<{
+  id: Scalars['ID']['input']
+}>
+
+export type UserQuery = {
+  __typename?: 'Query'
+  user?: { __typename?: 'User'; id: string; username: string; displayName: string } | null
+}
 
 export const AuthenticateDocument = gql`
   mutation Authenticate($username: String!) {
@@ -307,6 +325,47 @@ export type AuthenticateMutationCompositionFunctionResult = VueApolloComposable.
   AuthenticateMutation,
   AuthenticateMutationVariables
 >
+export const UpdateDisplayNameDocument = gql`
+  mutation UpdateDisplayName($displayName: String!) {
+    updateDisplayName(displayName: $displayName) {
+      token
+    }
+  }
+`
+
+/**
+ * __useUpdateDisplayNameMutation__
+ *
+ * To run a mutation, you first call `useUpdateDisplayNameMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateDisplayNameMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateDisplayNameMutation({
+ *   variables: {
+ *     displayName: // value for 'displayName'
+ *   },
+ * });
+ */
+export function useUpdateDisplayNameMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<UpdateDisplayNameMutation, UpdateDisplayNameMutationVariables>
+    | ReactiveFunction<
+        VueApolloComposable.UseMutationOptions<UpdateDisplayNameMutation, UpdateDisplayNameMutationVariables>
+      > = {},
+) {
+  return VueApolloComposable.useMutation<UpdateDisplayNameMutation, UpdateDisplayNameMutationVariables>(
+    UpdateDisplayNameDocument,
+    options,
+  )
+}
+export type UpdateDisplayNameMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
+  UpdateDisplayNameMutation,
+  UpdateDisplayNameMutationVariables
+>
 export const MeDocument = gql`
   query Me {
     me {
@@ -345,3 +404,47 @@ export function useMeLazyQuery(
   return VueApolloComposable.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, {}, options)
 }
 export type MeQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MeQuery, MeQueryVariables>
+export const UserDocument = gql`
+  query User($id: ID!) {
+    user(id: $id) {
+      id
+      username
+      displayName
+    }
+  }
+`
+
+/**
+ * __useUserQuery__
+ *
+ * To run a query within a Vue component, call `useUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useUserQuery({
+ *   id: // value for 'id'
+ * });
+ */
+export function useUserQuery(
+  variables: UserQueryVariables | VueCompositionApi.Ref<UserQueryVariables> | ReactiveFunction<UserQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<UserQuery, UserQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<UserQuery, UserQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<UserQuery, UserQueryVariables>> = {},
+) {
+  return VueApolloComposable.useQuery<UserQuery, UserQueryVariables>(UserDocument, variables, options)
+}
+export function useUserLazyQuery(
+  variables: UserQueryVariables | VueCompositionApi.Ref<UserQueryVariables> | ReactiveFunction<UserQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<UserQuery, UserQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<UserQuery, UserQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<UserQuery, UserQueryVariables>> = {},
+) {
+  return VueApolloComposable.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, variables, options)
+}
+export type UserQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<UserQuery, UserQueryVariables>
