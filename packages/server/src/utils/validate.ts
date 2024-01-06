@@ -40,6 +40,8 @@ export const errorMessages = {
     "Oops! This looks more like a secret code than a date. Can we try a real datetime? Our time machine can't decode this one!",
   forbidden:
     "Oops! Looks like you've tried to enter a top-secret area. Sorry, but it's off-limits for now. Maybe try something else or check your access permissions?",
+  over100Items: (itemName: string) =>
+    `Whoa, slow down there! Trying to load more than 100 ${itemName} at once is like trying to sip a waterfall. Let's stick to 100 or fewer to keep things smooth.`,
 }
 
 function limitLength<TableSchema, Key extends keyof TableSchema>(

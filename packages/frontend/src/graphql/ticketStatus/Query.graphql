@@ -1,0 +1,10 @@
+query TicketStatusBase($ticketStatusId: ID!) {
+  ticketStatus(id: $ticketStatusId) {
+    id
+    name
+    colorBase {
+      hue
+      saturation
+    }
+  }
+}

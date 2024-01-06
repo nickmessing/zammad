@@ -5,14 +5,15 @@ import { ticketComments } from '../../db/schema/ticketComments'
 import { tickets } from '../../db/schema/tickets'
 import { ticketStatuses } from '../../db/schema/ticketStatuses'
 import { users } from '../../db/schema/users'
+import { zodSchemas } from '../utils/validate'
 
 import type { Database } from './database'
 
 const TICKET_STATUSES = ['New', 'In Progress', 'Blocked', 'In Review', 'Completed'] as const
 
-const NUMBER_OF_USERS = [5, 20] as const
-const NUMBER_OF_TICKETS = [10, 50] as const
-const NUMBER_OF_COMMENTS_PER_TICKET = [0, 10] as const
+const NUMBER_OF_USERS = [20, 50] as const
+const NUMBER_OF_TICKETS = [400, 600] as const
+const NUMBER_OF_COMMENTS_PER_TICKET = [100, 200] as const
 
 const now = new Date()
 
@@ -28,7 +29,14 @@ function createRandomUser() {
   const id = createId()
   const firstName = faker.person.firstName()
   const lastName = faker.person.lastName()
-  const username = faker.internet.userName({ firstName, lastName })
+
+  let username = faker.internet.userName({ firstName, lastName })
+  let isUsernameValid = zodSchemas.username.safeParse(username).success
+  while (!isUsernameValid) {
+    username = faker.internet.userName({ firstName })
+    isUsernameValid = zodSchemas.username.safeParse(username).success
+  }
+
   const displayName = faker.person.fullName({ firstName, lastName })
   const createdAt = faker.date.recent({ days: 20 })
   const updatedAt = isUpdated()
@@ -117,8 +125,22 @@ export async function seedDatabase(database: Database) {
     return Array.from({ length: numberOfComments }).map(() => createRandomTicketComment(ticket, usersToInsert))
   })
 
-  await database.insert(users).values(usersToInsert)
-  await database.insert(ticketStatuses).values(ticketStatusesToInsert)
-  await database.insert(tickets).values(ticketsToInsert)
-  await database.insert(ticketComments).values(ticketCommentsToInsert)
+  // Inserting all the data at once fails, doing in serial since seeding is only happening once
+  // Expect this to take forever
+  for (const user of usersToInsert) {
+    console.log('Inserting user', user)
+    await database.insert(users).values([user])
+  }
+  for (const ticketStatus of ticketStatusesToInsert) {
+    console.log('Inserting ticket status', ticketStatus)
+    await database.insert(ticketStatuses).values([ticketStatus])
+  }
+  for (const ticket of ticketsToInsert) {
+    console.log('Inserting ticket', ticket)
+    await database.insert(tickets).values([ticket])
+  }
+  for (const ticketComment of ticketCommentsToInsert) {
+    console.log('Inserting ticket comment', ticketComment)
+    await database.insert(ticketComments).values([ticketComment])
+  }
 }

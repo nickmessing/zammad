@@ -34,6 +34,11 @@ export const router = createRouter({
           name: 'User',
           component: User,
         },
+        {
+          path: 'ticket/:id',
+          name: 'Ticket',
+          component: User,
+        },
       ],
     },
   ],

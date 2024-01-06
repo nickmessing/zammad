@@ -1,4 +1,7 @@
 import { and, count, desc, eq, lt } from 'drizzle-orm'
+import { GraphQLError } from 'graphql'
+
+import { errorMessages } from './validate'
 
 import type { Database, Schema } from '../bootstrap/database'
 import type { SQL } from 'drizzle-orm'
@@ -10,6 +13,12 @@ export async function getPaginatedTickets(
   after?: string,
   whereClause?: SQL,
 ) {
+  if (first > 100) {
+    throw new GraphQLError(errorMessages.over100Items('tickets'), {
+      extensions: { code: 'INVALID_INPUT' },
+    })
+  }
+
   const afterAsDate = after ? new Date(after) : undefined
 
   const [{ totalCount }] = await database.select({ totalCount: count() }).from(schema.tickets).where(whereClause)
@@ -42,6 +51,12 @@ export async function getPaginatedTicketComments(
   after?: string,
   whereClause?: SQL,
 ) {
+  if (first > 100) {
+    throw new GraphQLError(errorMessages.over100Items('comments'), {
+      extensions: { code: 'INVALID_INPUT' },
+    })
+  }
+
   const afterAsDate = after ? new Date(after) : undefined
 
   const basicWhereClause = and(whereClause, eq(schema.ticketComments.ticketId, ticketId))

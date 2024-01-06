@@ -2,7 +2,9 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
+import Heading from '@/components/atoms/common/Heading.vue'
 import Profile from '@/components/core/user/Profile.vue'
+import UserTickets from '@/components/ui/UserTickets.vue'
 
 const route = useRoute()
 
@@ -14,6 +16,15 @@ const id = computed(() => String(route.params.id))
     <div class="flex w-96 flex-shrink-0 flex-grow-0 flex-col gap-8 bg-slate-300 p-8">
       <Profile :id="id" />
     </div>
-    <div class="flex-grow-0 p-8">Something here</div>
+    <div class="flex flex-grow flex-row gap-8 p-8">
+      <div class="flex flex-grow basis-0 flex-col gap-4 rounded bg-slate-200 p-4">
+        <Heading>Created Tickets</Heading>
+        <UserTickets :userId="id" ticketsType="created" />
+      </div>
+      <div class="flex flex-grow basis-0 flex-col gap-4 rounded bg-slate-200 p-4">
+        <Heading>Assigned Tickets</Heading>
+        <UserTickets :userId="id" ticketsType="assigned" />
+      </div>
+    </div>
   </div>
 </template>
