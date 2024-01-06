@@ -2,6 +2,8 @@ query TicketStatusBase($ticketStatusId: ID!) {
   ticketStatus(id: $ticketStatusId) {
     id
     name
+    createdAt
+    updatedAt
     colorBase {
       hue
       saturation

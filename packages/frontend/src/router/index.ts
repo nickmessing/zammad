@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import LayoutMain from '../components/layout/LayoutMain.vue'
-import Authenticate from '../views/Authenticate.vue'
-import Error from '../views/Error.vue'
-import Home from '../views/Home.vue'
-import User from '../views/User.vue'
+import LayoutMain from '@/components/layout/LayoutMain.vue'
+import Authenticate from '@/views/Authenticate.vue'
+import Error from '@/views/Error.vue'
+import Home from '@/views/Home.vue'
+import Ticket from '@/views/Ticket.vue'
+import User from '@/views/User.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -37,7 +38,7 @@ export const router = createRouter({
         {
           path: 'ticket/:id',
           name: 'Ticket',
-          component: User,
+          component: Ticket,
         },
       ],
     },

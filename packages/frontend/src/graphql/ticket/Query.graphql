@@ -2,8 +2,13 @@ query Ticket($ticketId: ID!) {
   ticket(id: $ticketId) {
     id
     title
+    description
+    createdAt
+    updatedAt
     status {
       id
+      createdAt
+      updatedAt
     }
   }
 }
@@ -11,11 +16,15 @@ query Ticket($ticketId: ID!) {
 query UserCreatedTickets($userId: ID!, $first: Int!, $after: String) {
   user(id: $userId) {
     id
+    createdAt
+    updatedAt
     createdTickets(first: $first, after: $after) {
       totalCount
       endCursor
       items {
         id
+        createdAt
+        updatedAt
       }
     }
   }
@@ -24,11 +33,15 @@ query UserCreatedTickets($userId: ID!, $first: Int!, $after: String) {
 query UserAssignedTickets($userId: ID!, $first: Int!, $after: String) {
   user(id: $userId) {
     id
+    createdAt
+    updatedAt
     assignedTickets(first: $first, after: $after) {
       totalCount
       endCursor
       items {
         id
+        createdAt
+        updatedAt
       }
     }
   }

@@ -253,6 +253,26 @@ export type UserCreatedTicketsArgs = {
   first: Scalars['Int']['input']
 }
 
+export type UpdateTicketMutationVariables = Exact<{
+  ticketId: Scalars['ID']['input']
+  input: UpdateTicketInput
+}>
+
+export type UpdateTicketMutation = {
+  __typename?: 'Mutation'
+  ticket: {
+    __typename?: 'TicketMutation'
+    update: {
+      __typename?: 'Ticket'
+      id: string
+      title: string
+      createdAt: string
+      updatedAt: string
+      status: { __typename?: 'TicketStatus'; id: string; createdAt: string; updatedAt: string }
+    }
+  }
+}
+
 export type TicketQueryVariables = Exact<{
   ticketId: Scalars['ID']['input']
 }>
@@ -263,7 +283,10 @@ export type TicketQuery = {
     __typename?: 'Ticket'
     id: string
     title: string
-    status: { __typename?: 'TicketStatus'; id: string }
+    description: string
+    createdAt: string
+    updatedAt: string
+    status: { __typename?: 'TicketStatus'; id: string; createdAt: string; updatedAt: string }
   } | null
 }
 
@@ -278,11 +301,13 @@ export type UserCreatedTicketsQuery = {
   user?: {
     __typename?: 'User'
     id: string
+    createdAt: string
+    updatedAt: string
     createdTickets: {
       __typename?: 'TicketConnection'
       totalCount: number
       endCursor?: string | null
-      items: Array<{ __typename?: 'Ticket'; id: string }>
+      items: Array<{ __typename?: 'Ticket'; id: string; createdAt: string; updatedAt: string }>
     }
   } | null
 }
@@ -298,11 +323,13 @@ export type UserAssignedTicketsQuery = {
   user?: {
     __typename?: 'User'
     id: string
+    createdAt: string
+    updatedAt: string
     assignedTickets: {
       __typename?: 'TicketConnection'
       totalCount: number
       endCursor?: string | null
-      items: Array<{ __typename?: 'Ticket'; id: string }>
+      items: Array<{ __typename?: 'Ticket'; id: string; createdAt: string; updatedAt: string }>
     }
   } | null
 }
@@ -317,6 +344,8 @@ export type TicketStatusBaseQuery = {
     __typename?: 'TicketStatus'
     id: string
     name: string
+    createdAt: string
+    updatedAt: string
     colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
   } | null
 }
@@ -341,7 +370,17 @@ export type UpdateDisplayNameMutation = {
 
 export type MeQueryVariables = Exact<{ [key: string]: never }>
 
-export type MeQuery = { __typename?: 'Query'; me?: { __typename?: 'User'; id: string; username: string } | null }
+export type MeQuery = {
+  __typename?: 'Query'
+  me?: {
+    __typename?: 'User'
+    id: string
+    username: string
+    displayName: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
 
 export type UserQueryVariables = Exact<{
   id: Scalars['ID']['input']
@@ -349,16 +388,80 @@ export type UserQueryVariables = Exact<{
 
 export type UserQuery = {
   __typename?: 'Query'
-  user?: { __typename?: 'User'; id: string; username: string; displayName: string } | null
+  user?: {
+    __typename?: 'User'
+    id: string
+    username: string
+    displayName: string
+    createdAt: string
+    updatedAt: string
+  } | null
 }
 
+export const UpdateTicketDocument = gql`
+  mutation UpdateTicket($ticketId: ID!, $input: UpdateTicketInput!) {
+    ticket(id: $ticketId) {
+      update(input: $input) {
+        id
+        title
+        createdAt
+        updatedAt
+        status {
+          id
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useUpdateTicketMutation__
+ *
+ * To run a mutation, you first call `useUpdateTicketMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTicketMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateTicketMutation({
+ *   variables: {
+ *     ticketId: // value for 'ticketId'
+ *     input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateTicketMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<UpdateTicketMutation, UpdateTicketMutationVariables>
+    | ReactiveFunction<
+        VueApolloComposable.UseMutationOptions<UpdateTicketMutation, UpdateTicketMutationVariables>
+      > = {},
+) {
+  return VueApolloComposable.useMutation<UpdateTicketMutation, UpdateTicketMutationVariables>(
+    UpdateTicketDocument,
+    options,
+  )
+}
+export type UpdateTicketMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
+  UpdateTicketMutation,
+  UpdateTicketMutationVariables
+>
 export const TicketDocument = gql`
   query Ticket($ticketId: ID!) {
     ticket(id: $ticketId) {
       id
       title
+      description
+      createdAt
+      updatedAt
       status {
         id
+        createdAt
+        updatedAt
       }
     }
   }
@@ -408,11 +511,15 @@ export const UserCreatedTicketsDocument = gql`
   query UserCreatedTickets($userId: ID!, $first: Int!, $after: String) {
     user(id: $userId) {
       id
+      createdAt
+      updatedAt
       createdTickets(first: $first, after: $after) {
         totalCount
         endCursor
         items {
           id
+          createdAt
+          updatedAt
         }
       }
     }
@@ -484,11 +591,15 @@ export const UserAssignedTicketsDocument = gql`
   query UserAssignedTickets($userId: ID!, $first: Int!, $after: String) {
     user(id: $userId) {
       id
+      createdAt
+      updatedAt
       assignedTickets(first: $first, after: $after) {
         totalCount
         endCursor
         items {
           id
+          createdAt
+          updatedAt
         }
       }
     }
@@ -561,6 +672,8 @@ export const TicketStatusBaseDocument = gql`
     ticketStatus(id: $ticketStatusId) {
       id
       name
+      createdAt
+      updatedAt
       colorBase {
         hue
         saturation
@@ -707,6 +820,9 @@ export const MeDocument = gql`
     me {
       id
       username
+      displayName
+      createdAt
+      updatedAt
     }
   }
 `
@@ -746,6 +862,8 @@ export const UserDocument = gql`
       id
       username
       displayName
+      createdAt
+      updatedAt
     }
   }
 `

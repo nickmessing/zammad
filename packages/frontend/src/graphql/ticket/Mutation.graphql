@@ -1,0 +1,15 @@
+mutation UpdateTicket($ticketId: ID!, $input: UpdateTicketInput!) {
+  ticket(id: $ticketId) {
+    update(input: $input) {
+      id
+      title
+      createdAt
+      updatedAt
+      status {
+        id
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}

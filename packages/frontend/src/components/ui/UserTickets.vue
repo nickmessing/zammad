@@ -3,10 +3,9 @@ import { mdiLoading } from '@mdi/js'
 import { useElementVisibility } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 
+import Icon from '@/components/atoms/common/Icon.vue'
 import { useUserAssignedTicketsQuery, useUserCreatedTicketsQuery } from '@/generated/graphql'
 import { TICKETS_PER_PAGE } from '@/utils/constants'
-
-import Icon from '../atoms/common/Icon.vue'
 
 import TicketCard from './TicketCard.vue'
 

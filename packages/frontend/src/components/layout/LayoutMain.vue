@@ -3,10 +3,9 @@ import { computed } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 
 import { authorizationToken } from '@/apollo/links/authorization'
+import Button from '@/components/atoms/common/Button.vue'
+import Alerts from '@/components/specific/Alerts.vue'
 import { useMeQuery } from '@/generated/graphql'
-
-import Button from '../atoms/common/Button.vue'
-import Alerts from '../specific/Alerts.vue'
 
 const router = useRouter()
 const { result, loading } = useMeQuery()
@@ -25,8 +24,8 @@ function logout() {
       <div class="relative flex h-16 items-center justify-between">
         <div class="flex flex-1 items-center justify-center gap-10 sm:items-stretch sm:justify-start">
           <div class="flex flex-shrink-0 items-center gap-3">
-            <img class="h-14 w-14" src="../../assets/logo.svg" />
-            <img src="../../assets/logotype.svg" />
+            <img class="h-14 w-14" src="@/assets/logo.svg" />
+            <img src="@/assets/logotype.svg" />
           </div>
           <div class="flex flex-grow items-center">
             <div class="flex gap-3">

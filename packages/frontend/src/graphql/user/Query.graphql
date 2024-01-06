@@ -2,6 +2,9 @@ query Me {
   me {
     id
     username
+    displayName
+    createdAt
+    updatedAt
   }
 }
 
@@ -10,5 +13,7 @@ query User($id: ID!) {
     id
     username
     displayName
+    createdAt
+    updatedAt
   }
 }

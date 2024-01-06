@@ -134,7 +134,7 @@ module.exports = {
         },
       },
     ],
-    '@typescript-eslint/consistent-type-imports': 'error',
+    '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
     'unicorn/filename-case': 'off',
     'unicorn/prevent-abbreviations': [
       'error',

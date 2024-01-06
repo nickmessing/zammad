@@ -5,7 +5,10 @@
   "scripts": {
     "dev:frontend": "cd packages/frontend && pnpm dev",
     "dev:server": "cd packages/server && pnpm dev",
-    "dev": "run-p -l dev:*"
+    "dev": "run-p -l dev:*",
+    "lint:frontend": "cd packages/frontend && pnpm lint",
+    "lint:server": "cd packages/server && pnpm lint",
+    "lint": "run-s -l lint:*"
   },
   "devDependencies": {
     "npm-run-all2": "^6.1.1",
