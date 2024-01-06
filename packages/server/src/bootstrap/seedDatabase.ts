@@ -49,10 +49,19 @@ function createRandomUser() {
   return { id, username, displayName, createdAt, updatedAt }
 }
 function createRandomTicketStatus(name: string, order: number) {
+  const staticColors = {
+    Blocked: { hue: 0, saturation: 84 },
+    Completed: { hue: 142, saturation: 71 },
+  }
+
   const id = createId()
   const description = faker.lorem.sentence()
-  const colorHue = faker.number.int({ min: 0, max: 360 })
-  const colorSaturation = faker.number.int({ min: 10, max: 90 })
+  const colorHue =
+    name in staticColors ? staticColors[name as keyof typeof staticColors].hue : faker.number.int({ min: 0, max: 360 })
+  const colorSaturation =
+    name in staticColors
+      ? staticColors[name as keyof typeof staticColors].saturation
+      : faker.number.int({ min: 10, max: 90 })
   const createdAt = faker.date.recent({ days: 20 })
   const updatedAt = isUpdated()
     ? faker.date.between({
