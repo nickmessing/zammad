@@ -41,7 +41,7 @@ const saturation = computed(() => colorBase.value.saturation)
   --size: calc(v-bind(size) * 1px);
   --font-size: calc(var(--size) * 0.7);
   --line-height: calc(var(--size) * 0.9);
-  --background-color: hsl(v-bind(hue), calc(v-bind(saturation) * 1%), 30%);
+  --background-color: hsl(v-bind(hue), calc(v-bind(saturation) * 1%), 40%);
 
   width: var(--size);
   height: var(--size);
