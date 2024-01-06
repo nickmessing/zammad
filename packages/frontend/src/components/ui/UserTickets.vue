@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { mdiLoading } from '@mdi/js'
-import { computed } from 'vue'
+import { useElementVisibility } from '@vueuse/core'
+import { computed, ref, watch } from 'vue'
 
 import { useUserAssignedTicketsQuery, useUserCreatedTicketsQuery } from '@/generated/graphql'
 import { TICKETS_PER_PAGE } from '@/utils/constants'
@@ -14,7 +15,14 @@ const props = defineProps<{
   ticketsType: 'assigned' | 'created'
 }>()
 
-const { result: createdTicketsQueryResult, loading: isCreatedTicketsQueryLoading } = useUserCreatedTicketsQuery(
+const loadingSpinnerContainer = ref<HTMLDivElement>()
+const isLoadingSpinnerContainerVisible = useElementVisibility(loadingSpinnerContainer)
+
+const {
+  result: createdTicketsQueryResult,
+  loading: isCreatedTicketsQueryLoading,
+  fetchMore: fetchMoreCreatedTickets,
+} = useUserCreatedTicketsQuery(
   () => ({
     userId: props.userId,
     first: TICKETS_PER_PAGE,
@@ -24,7 +32,11 @@ const { result: createdTicketsQueryResult, loading: isCreatedTicketsQueryLoading
     enabled: props.ticketsType === 'created',
   }),
 )
-const { result: assignedTicketsQueryResult, loading: isAssignedTicketsQueryLoading } = useUserAssignedTicketsQuery(
+const {
+  result: assignedTicketsQueryResult,
+  loading: isAssignedTicketsQueryLoading,
+  fetchMore: fetchMoreAssignedTickets,
+} = useUserAssignedTicketsQuery(
   () => ({
     userId: props.userId,
     first: TICKETS_PER_PAGE,
@@ -44,12 +56,59 @@ const tickets = computed(
 const isLoading = computed(() =>
   props.ticketsType === 'created' ? isCreatedTicketsQueryLoading.value : isAssignedTicketsQueryLoading.value,
 )
+const isLoadMorePossible = computed(() =>
+  Boolean(
+    props.ticketsType === 'created'
+      ? createdTicketsQueryResult.value?.user?.createdTickets.endCursor
+      : assignedTicketsQueryResult.value?.user?.assignedTickets.endCursor,
+  ),
+)
+async function fetchMore() {
+  if (isLoading.value || !isLoadMorePossible.value) {
+    return
+  }
+  if (props.ticketsType === 'created') {
+    if (!createdTicketsQueryResult.value?.user?.createdTickets.endCursor) {
+      return
+    }
+
+    await fetchMoreCreatedTickets({
+      variables: {
+        userId: props.userId,
+        first: TICKETS_PER_PAGE,
+        after: createdTicketsQueryResult.value.user.createdTickets.endCursor,
+      },
+    })
+  } else {
+    if (!assignedTicketsQueryResult.value?.user?.assignedTickets.endCursor) {
+      return
+    }
+
+    await fetchMoreAssignedTickets({
+      variables: {
+        userId: props.userId,
+        first: TICKETS_PER_PAGE,
+        after: assignedTicketsQueryResult.value.user.assignedTickets.endCursor,
+      },
+    })
+  }
+}
+
+watch(isLoadingSpinnerContainerVisible, isVisible => {
+  if (isVisible) {
+    void fetchMore()
+  }
+})
 </script>
 
 <template>
   <div class="flex flex-grow flex-col gap-2 overflow-auto">
     <TicketCard v-for="ticket in tickets" :key="ticket.id" :ticketId="ticket.id" />
-    <div class="flex shrink-0 flex-row justify-center overflow-hidden">
+    <div
+      v-if="isLoadMorePossible || isLoading"
+      ref="loadingSpinnerContainer"
+      class="flex shrink-0 flex-row justify-center overflow-hidden"
+    >
       <Icon
         :path="mdiLoading"
         :class="{ 'opacity-100': isLoading }"

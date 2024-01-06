@@ -31,8 +31,6 @@ export function getColorBaseFromNumber(number: number): ColorBase {
 }
 
 export function getColorBaseFromString(string: string): ColorBase {
-  console.log({ string })
   const checksum = fletchersChecksum(string)
-  console.log({ checksum })
   return getColorBaseFromNumber(checksum)
 }
