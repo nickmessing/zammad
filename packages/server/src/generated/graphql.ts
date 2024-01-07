@@ -225,6 +225,7 @@ export type TicketStatusMutationUpdateArgs = {
 }
 
 export type UpdateTicketInput = {
+  assigneeId?: InputMaybe<Scalars['String']['input']>
   description?: InputMaybe<Scalars['String']['input']>
   statusId?: InputMaybe<Scalars['String']['input']>
   title?: InputMaybe<Scalars['String']['input']>

@@ -27,6 +27,7 @@ input UpdateTicketInput {
   title: String
   description: String
   statusId: String
+  assigneeId: String
 }
 
 type TicketMutation {

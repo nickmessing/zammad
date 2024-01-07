@@ -11,7 +11,8 @@ const inputSchema = z.object({
   input: z.object({
     title: zodSchemas.ticket.title.optional(),
     description: z.string().optional(),
-    statusId: z.union([zodSchemas.id, z.literal('')]).optional(),
+    statusId: zodSchemas.id.optional(),
+    assigneeId: z.union([zodSchemas.id, z.literal('')]).optional(),
   }),
 })
 
@@ -30,6 +31,10 @@ export const update = (async (parent, input, { database, schema, tokenInfo }) =>
   }
   if (updateTicketInput.statusId != undefined && updateTicketInput.statusId !== parent.statusId) {
     updatePayload.statusId = updateTicketInput.statusId
+  }
+  if (updateTicketInput.assigneeId != undefined && updateTicketInput.assigneeId !== parent.assigneeId) {
+    // eslint-disable-next-line unicorn/no-null -- null is used to unset the assignee
+    updatePayload.assigneeId = updateTicketInput.assigneeId === '' ? null : updateTicketInput.assigneeId
   }
 
   if (Object.keys(updatePayload).length === 0) {
