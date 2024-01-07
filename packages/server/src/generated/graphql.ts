@@ -105,6 +105,7 @@ export type Query = {
   ticketStatuses: Array<TicketStatus>
   tickets: TicketConnection
   user?: Maybe<User>
+  users: Array<User>
 }
 
 export type QueryTicketArgs = {
@@ -466,6 +467,7 @@ export type QueryResolvers<
     RequireFields<QueryTicketsArgs, 'first'>
   >
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
 }
 
 export type TicketResolvers<
