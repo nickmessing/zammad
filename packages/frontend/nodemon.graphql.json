@@ -1,5 +1,5 @@
 {
   "exec": "pnpm generate:graphql",
-  "watch": ["src/graphql", "codegen.ts"],
+  "watch": ["src/graphql", "codegen.ts", "../server/src/graphql"],
   "ext": "graphql,ts"
 }
