@@ -6,12 +6,15 @@ import { computed, ref, watch } from 'vue'
 import Icon from '@/components/atoms/common/Icon.vue'
 import Label from '@/components/atoms/forms/Label.vue'
 import TextInput from '@/components/atoms/forms/TextInput.vue'
-import { useTicketQuery, useUpdateTicketMutation, type UpdateTicketInput } from '@/generated/graphql'
+import { useTicketQuery, useUpdateTicketMutation, type UpdateTicketInput, useMeQuery } from '@/generated/graphql'
 import { areObjectsEqual } from '@/utils/common'
 
 const props = defineProps<{
   id: string
 }>()
+
+const { result: meQueryResult } = useMeQuery()
+const isAuthenticated = computed(() => Boolean(meQueryResult.value?.me))
 
 const { result: ticketQueryResult } = useTicketQuery(() => ({
   ticketId: props.id,
@@ -92,12 +95,12 @@ watch(debouncedUpdateTicketInput, () => {
     </Transition>
     <Label>
       <template #label> Title </template>
-      <TextInput v-model="ticketTitle" name="ticketTitle" />
+      <TextInput v-model="ticketTitle" :isDisabled="!isAuthenticated" name="ticketTitle" />
     </Label>
     <!-- TODO: Replace with a rich text editor -->
     <Label>
       <template #label> Description </template>
-      <TextInput v-model="ticketDescription" name="ticketDescription" isTextarea />
+      <TextInput v-model="ticketDescription" :isDisabled="!isAuthenticated" name="ticketDescription" isTextarea />
     </Label>
   </div>
 </template>
