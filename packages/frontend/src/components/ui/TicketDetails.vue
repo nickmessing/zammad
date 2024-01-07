@@ -9,6 +9,8 @@ import TextInput from '@/components/atoms/forms/TextInput.vue'
 import { useTicketQuery, useUpdateTicketMutation, type UpdateTicketInput, useMeQuery } from '@/generated/graphql'
 import { areObjectsEqual } from '@/utils/common'
 
+import StatusPicker from './StatusPicker.vue'
+
 const props = defineProps<{
   id: string
 }>()
@@ -32,6 +34,12 @@ const ticketDescription = computed({
   set: value => (dirtyTicketDescription.value = value),
 })
 
+const dirtyTicketStatusId = ref<string>()
+const ticketStatusId = computed({
+  get: () => dirtyTicketStatusId.value ?? ticketQueryResult.value?.ticket?.status.id ?? '',
+  set: value => (dirtyTicketStatusId.value = value),
+})
+
 const updateTicketInput = computed<UpdateTicketInput>(() => {
   const data: UpdateTicketInput = {}
 
@@ -40,6 +48,9 @@ const updateTicketInput = computed<UpdateTicketInput>(() => {
   }
   if (dirtyTicketDescription.value && dirtyTicketDescription.value !== ticketQueryResult.value?.ticket?.description) {
     data.description = dirtyTicketDescription.value
+  }
+  if (dirtyTicketStatusId.value && dirtyTicketStatusId.value !== ticketQueryResult.value?.ticket?.status.id) {
+    data.statusId = dirtyTicketStatusId.value
   }
 
   return data
@@ -101,6 +112,10 @@ watch(debouncedUpdateTicketInput, () => {
     <Label>
       <template #label> Description </template>
       <TextInput v-model="ticketDescription" :isDisabled="!isAuthenticated" name="ticketDescription" isTextarea />
+    </Label>
+    <Label>
+      <template #label> Status </template>
+      <StatusPicker v-model="ticketStatusId" :isDisabled="!isAuthenticated" />
     </Label>
   </div>
 </template>

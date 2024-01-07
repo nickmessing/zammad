@@ -1,3 +1,12 @@
+query TicketStatuses {
+  ticketStatuses {
+    id
+    order
+    createdAt
+    updatedAt
+  }
+}
+
 query TicketStatusBase($ticketStatusId: ID!) {
   ticketStatus(id: $ticketStatusId) {
     id

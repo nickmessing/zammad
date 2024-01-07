@@ -26,7 +26,7 @@ const saturation = computed(() => ticketStatusBaseQueryResult.value?.ticketStatu
   <RouterLink
     v-if="ticketQueryResult?.ticket"
     :to="{ name: 'Ticket', params: { id: ticketQueryResult.ticket.id } }"
-    class="ticket-status-card flex flex-col gap-2 rounded border-2 bg-gray-50 p-2 text-left transition-colors"
+    class="ticket-status-card flex flex-col gap-2 rounded border-2 p-2 text-left transition-colors"
   >
     <slot />
   </RouterLink>
@@ -39,6 +39,7 @@ const saturation = computed(() => ticketStatusBaseQueryResult.value?.ticketStatu
   --lightness: 50%;
 
   border-color: hsl(calc(var(--hue) * 1deg), calc(var(--saturation) * 1%), var(--lightness));
+  background-color: hsl(calc(var(--hue) * 1deg), calc(var(--saturation) * 1%), calc(var(--lightness) * 0.05 + 95%));
 
   &:hover {
     --lightness: 70%;

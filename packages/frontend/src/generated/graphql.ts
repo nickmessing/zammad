@@ -334,6 +334,19 @@ export type UserAssignedTicketsQuery = {
   } | null
 }
 
+export type TicketStatusesQueryVariables = Exact<{ [key: string]: never }>
+
+export type TicketStatusesQuery = {
+  __typename?: 'Query'
+  ticketStatuses: Array<{
+    __typename?: 'TicketStatus'
+    id: string
+    order: number
+    createdAt: string
+    updatedAt: string
+  }>
+}
+
 export type TicketStatusBaseQueryVariables = Exact<{
   ticketStatusId: Scalars['ID']['input']
 }>
@@ -666,6 +679,57 @@ export function useUserAssignedTicketsLazyQuery(
 export type UserAssignedTicketsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
   UserAssignedTicketsQuery,
   UserAssignedTicketsQueryVariables
+>
+export const TicketStatusesDocument = gql`
+  query TicketStatuses {
+    ticketStatuses {
+      id
+      order
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+/**
+ * __useTicketStatusesQuery__
+ *
+ * To run a query within a Vue component, call `useTicketStatusesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTicketStatusesQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useTicketStatusesQuery();
+ */
+export function useTicketStatusesQuery(
+  options:
+    | VueApolloComposable.UseQueryOptions<TicketStatusesQuery, TicketStatusesQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<TicketStatusesQuery, TicketStatusesQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<TicketStatusesQuery, TicketStatusesQueryVariables>> = {},
+) {
+  return VueApolloComposable.useQuery<TicketStatusesQuery, TicketStatusesQueryVariables>(
+    TicketStatusesDocument,
+    {},
+    options,
+  )
+}
+export function useTicketStatusesLazyQuery(
+  options:
+    | VueApolloComposable.UseQueryOptions<TicketStatusesQuery, TicketStatusesQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<TicketStatusesQuery, TicketStatusesQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<TicketStatusesQuery, TicketStatusesQueryVariables>> = {},
+) {
+  return VueApolloComposable.useLazyQuery<TicketStatusesQuery, TicketStatusesQueryVariables>(
+    TicketStatusesDocument,
+    {},
+    options,
+  )
+}
+export type TicketStatusesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+  TicketStatusesQuery,
+  TicketStatusesQueryVariables
 >
 export const TicketStatusBaseDocument = gql`
   query TicketStatusBase($ticketStatusId: ID!) {
