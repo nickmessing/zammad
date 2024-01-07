@@ -112,7 +112,7 @@ watch(debouncedUpdateTicketInput, () => {
 </script>
 
 <template>
-  <div v-if="ticketQueryResult?.ticket" class="relative flex flex-col gap-4">
+  <div v-if="ticketQueryResult?.ticket" class="relative flex flex-grow flex-col gap-4">
     <Transition name="fade-and-slide">
       <div v-if="isSaving" class="absolute right-0 top-0 flex -translate-y-1/2 flex-row gap-2">
         <div>Saving...</div>
@@ -144,6 +144,7 @@ watch(debouncedUpdateTicketInput, () => {
       <template #label> Author </template>
       <UserIndicator :userId="ticketQueryResult.ticket.author.id" />
     </Label>
+    <div class="flex-grow" />
     <div class="text-sm text-gray-700">Last updated {{ lastModified }}</div>
   </div>
 </template>
