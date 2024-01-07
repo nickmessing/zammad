@@ -101,6 +101,7 @@ export type Query = {
   ticketStatuses: Array<TicketStatus>
   tickets: TicketConnection
   user?: Maybe<User>
+  users: Array<User>
 }
 
 export type QueryTicketArgs = {
@@ -286,6 +287,7 @@ export type TicketQuery = {
     description: string
     createdAt: string
     updatedAt: string
+    assignee?: { __typename?: 'User'; id: string; createdAt: string; updatedAt: string } | null
     status: { __typename?: 'TicketStatus'; id: string; createdAt: string; updatedAt: string }
   } | null
 }
@@ -396,7 +398,7 @@ export type MeQuery = {
 }
 
 export type UserQueryVariables = Exact<{
-  id: Scalars['ID']['input']
+  userId: Scalars['ID']['input']
 }>
 
 export type UserQuery = {
@@ -469,6 +471,11 @@ export const TicketDocument = gql`
       id
       title
       description
+      assignee {
+        id
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
       status {
@@ -921,8 +928,8 @@ export function useMeLazyQuery(
 }
 export type MeQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MeQuery, MeQueryVariables>
 export const UserDocument = gql`
-  query User($id: ID!) {
-    user(id: $id) {
+  query User($userId: ID!) {
+    user(id: $userId) {
       id
       username
       displayName
@@ -944,7 +951,7 @@ export const UserDocument = gql`
  *
  * @example
  * const { result, loading, error } = useUserQuery({
- *   id: // value for 'id'
+ *   userId: // value for 'userId'
  * });
  */
 export function useUserQuery(

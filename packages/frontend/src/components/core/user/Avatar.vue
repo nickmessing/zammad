@@ -6,7 +6,7 @@ import { getColorBaseFromString } from '@/utils/colorBase'
 
 const props = withDefaults(
   defineProps<{
-    id: string
+    userId: string
     size?: number
   }>(),
   {
@@ -15,7 +15,7 @@ const props = withDefaults(
 )
 
 const { result, loading, error } = useUserQuery(() => ({
-  id: props.id,
+  userId: props.userId,
 }))
 
 const content = computed(() =>

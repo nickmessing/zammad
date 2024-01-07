@@ -11,14 +11,14 @@ import Avatar from '@/components/core/user/Avatar.vue'
 import { useMeQuery, useUpdateDisplayNameMutation, useUserQuery } from '@/generated/graphql'
 
 const props = defineProps<{
-  id: string
+  userId: string
 }>()
 
 const displayName = ref('')
 const isDisplayNameFocused = ref(false)
 
 const { result: userQueryResult, loading: isUserQueryLoading } = useUserQuery(() => ({
-  id: props.id,
+  userId: props.userId,
 }))
 const { result: meQueryResult, loading: isMeQueryLoading } = useMeQuery()
 
@@ -73,12 +73,12 @@ function saveDisplayName() {
 </script>
 
 <template>
-  <Avatar :id="id" :size="320" />
+  <Avatar v-if="userQueryResult?.user?.id" :userId="userQueryResult.user.id" :size="320" />
 
-  <div class="flex flex-col gap-4">
+  <div v-if="userQueryResult?.user" class="flex flex-col gap-4">
     <Label>
       <template #label> Username </template>
-      <TextInput :modelValue="userQueryResult?.user?.username ?? ''" name="username" isDisabled />
+      <TextInput :modelValue="userQueryResult.user.username ?? ''" name="username" isDisabled />
     </Label>
 
     <Label>

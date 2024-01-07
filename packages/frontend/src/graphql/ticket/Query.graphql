@@ -3,6 +3,11 @@ query Ticket($ticketId: ID!) {
     id
     title
     description
+    assignee {
+      id
+      createdAt
+      updatedAt
+    }
     createdAt
     updatedAt
     status {
