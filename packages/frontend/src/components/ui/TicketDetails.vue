@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mdiCheck, mdiLoading } from '@mdi/js'
-import { refDebounced, useTimeoutFn } from '@vueuse/core'
+import { refDebounced, useTimeAgo, useTimeoutFn } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 
 import Icon from '@/components/atoms/common/Icon.vue'
@@ -10,6 +10,7 @@ import { useTicketQuery, useUpdateTicketMutation, type UpdateTicketInput, useMeQ
 import { areObjectsEqual } from '@/utils/common'
 
 import StatusPicker from './StatusPicker.vue'
+import UserIndicator from './UserIndicator.vue'
 import UserPicker from './UserPicker.vue'
 
 const props = defineProps<{
@@ -22,6 +23,11 @@ const isAuthenticated = computed(() => Boolean(meQueryResult.value?.me))
 const { result: ticketQueryResult } = useTicketQuery(() => ({
   ticketId: props.id,
 }))
+
+const lastModified = useTimeAgo(() => ticketQueryResult.value?.ticket?.updatedAt ?? '', {
+  showSecond: true,
+  updateInterval: 1000,
+})
 
 const dirtyTicketTitle = ref<string>()
 const ticketTitle = computed({
@@ -126,13 +132,18 @@ watch(debouncedUpdateTicketInput, () => {
       <template #label> Description </template>
       <TextInput v-model="ticketDescription" :isDisabled="!isAuthenticated" name="ticketDescription" isTextarea />
     </Label>
-    <Label>
+    <Label isNoPointerCursor>
       <template #label> Status </template>
       <StatusPicker v-model:ticketStatusId="ticketStatusId" :isDisabled="!isAuthenticated" />
     </Label>
-    <Label>
+    <Label isNoPointerCursor>
       <template #label> Assignee </template>
       <UserPicker v-model:userId="ticketAssigneeId" :isDisabled="!isAuthenticated" />
     </Label>
+    <Label isNoPointerCursor>
+      <template #label> Author </template>
+      <UserIndicator :userId="ticketQueryResult.ticket.author.id" />
+    </Label>
+    <div class="text-sm text-gray-700">Last updated {{ lastModified }}</div>
   </div>
 </template>

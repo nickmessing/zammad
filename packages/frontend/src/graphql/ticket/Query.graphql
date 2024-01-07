@@ -8,6 +8,11 @@ query Ticket($ticketId: ID!) {
       createdAt
       updatedAt
     }
+    author {
+      id
+      createdAt
+      updatedAt
+    }
     createdAt
     updatedAt
     status {

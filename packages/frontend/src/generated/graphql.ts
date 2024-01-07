@@ -289,6 +289,7 @@ export type TicketQuery = {
     createdAt: string
     updatedAt: string
     assignee?: { __typename?: 'User'; id: string; createdAt: string; updatedAt: string } | null
+    author: { __typename?: 'User'; id: string; createdAt: string; updatedAt: string }
     status: { __typename?: 'TicketStatus'; id: string; createdAt: string; updatedAt: string }
   } | null
 }
@@ -480,6 +481,11 @@ export const TicketDocument = gql`
       title
       description
       assignee {
+        id
+        createdAt
+        updatedAt
+      }
+      author {
         id
         createdAt
         updatedAt
