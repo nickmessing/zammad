@@ -6,20 +6,32 @@ import { getColorBaseFromString } from '@/utils/colorBase'
 
 const props = withDefaults(
   defineProps<{
-    userId: string
+    userId?: string
     size?: number
   }>(),
   {
+    userId: '',
     size: 32,
   },
 )
 
-const { result, loading, error } = useUserQuery(() => ({
-  userId: props.userId,
-}))
+const { result, loading, error } = useUserQuery(
+  () => ({
+    userId: props.userId,
+  }),
+  () => ({
+    enabled: Boolean(props.userId),
+  }),
+)
 
 const content = computed(() =>
-  loading.value ? 'Loading...' : error.value ? 'Error' : result.value?.user?.displayName[0] ?? '?',
+  props.userId
+    ? loading.value
+      ? 'Loading...'
+      : error.value
+        ? 'Error'
+        : result.value?.user?.displayName[0] ?? '?'
+    : '👤',
 )
 
 const size = computed(() => props.size)

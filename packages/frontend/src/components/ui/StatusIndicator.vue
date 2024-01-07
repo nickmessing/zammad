@@ -6,9 +6,6 @@ import { useTicketStatusBaseQuery } from '@/generated/graphql'
 const props = defineProps<{
   ticketStatusId: string
 }>()
-defineSlots<{
-  default(): unknown
-}>()
 
 const { result: ticketStatusBaseQueryResult } = useTicketStatusBaseQuery(() => ({
   ticketStatusId: props.ticketStatusId,

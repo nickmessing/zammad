@@ -10,6 +10,7 @@ import { useTicketQuery, useUpdateTicketMutation, type UpdateTicketInput, useMeQ
 import { areObjectsEqual } from '@/utils/common'
 
 import StatusPicker from './StatusPicker.vue'
+import UserPicker from './UserPicker.vue'
 
 const props = defineProps<{
   id: string
@@ -40,6 +41,12 @@ const ticketStatusId = computed({
   set: value => (dirtyTicketStatusId.value = value),
 })
 
+const dirtyTicketAssigneeId = ref<string>()
+const ticketAssigneeId = computed({
+  get: () => dirtyTicketAssigneeId.value ?? ticketQueryResult.value?.ticket?.assignee?.id ?? '',
+  set: value => (dirtyTicketAssigneeId.value = value),
+})
+
 const updateTicketInput = computed<UpdateTicketInput>(() => {
   const data: UpdateTicketInput = {}
 
@@ -51,6 +58,12 @@ const updateTicketInput = computed<UpdateTicketInput>(() => {
   }
   if (dirtyTicketStatusId.value && dirtyTicketStatusId.value !== ticketQueryResult.value?.ticket?.status.id) {
     data.statusId = dirtyTicketStatusId.value
+  }
+  if (
+    dirtyTicketAssigneeId.value !== undefined &&
+    dirtyTicketAssigneeId.value !== ticketQueryResult.value?.ticket?.assignee?.id
+  ) {
+    data.assigneeId = dirtyTicketAssigneeId.value
   }
 
   return data
@@ -115,7 +128,11 @@ watch(debouncedUpdateTicketInput, () => {
     </Label>
     <Label>
       <template #label> Status </template>
-      <StatusPicker v-model="ticketStatusId" :isDisabled="!isAuthenticated" />
+      <StatusPicker v-model:ticketStatusId="ticketStatusId" :isDisabled="!isAuthenticated" />
+    </Label>
+    <Label>
+      <template #label> Assignee </template>
+      <UserPicker v-model:userId="ticketAssigneeId" :isDisabled="!isAuthenticated" />
     </Label>
   </div>
 </template>

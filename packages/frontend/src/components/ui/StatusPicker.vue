@@ -8,7 +8,7 @@ import StatusIndicator from './StatusIndicator.vue'
 
 const props = withDefaults(
   defineProps<{
-    modelValue: string
+    ticketStatusId: string
     isDisabled?: boolean
   }>(),
   {
@@ -16,9 +16,9 @@ const props = withDefaults(
   },
 )
 const emit = defineEmits<{
-  'update:modelValue': [modelValue: string]
+  'update:ticketStatusId': [ticketStatusId: string]
 }>()
-const modelValue = useVModel(props, 'modelValue', emit)
+const ticketStatusId = useVModel(props, 'ticketStatusId', emit)
 const [isPickerOpen, togglePickerOpen] = useToggle(false)
 
 const container = ref<HTMLDivElement>()
@@ -39,8 +39,8 @@ function handleIndicatorClick() {
 
   togglePickerOpen()
 }
-function handleOptionClick(ticketStatusId: string) {
-  modelValue.value = ticketStatusId
+function handleOptionClick(newTicketStatusId: string) {
+  ticketStatusId.value = newTicketStatusId
   togglePickerOpen(false)
 }
 
@@ -54,19 +54,20 @@ onClickOutside(container, () => {
     <div
       :class="{
         'cursor-not-allowed bg-gray-200': props.isDisabled,
+        'cursor-pointer bg-white': !props.isDisabled,
       }"
-      class="flex cursor-pointer flex-row items-center justify-start rounded-md border border-transparent bg-white p-2 hover:border-blue-300 active:border-blue-400"
+      class="flex flex-row items-center justify-start rounded-md border border-transparent p-2 hover:border-blue-300 active:border-blue-400"
       @click="handleIndicatorClick"
     >
-      <StatusIndicator :ticketStatusId="modelValue" />
+      <StatusIndicator :ticketStatusId="ticketStatusId" />
     </div>
-    <div v-if="isPickerOpen" class="absolute mt-2 w-full rounded-md bg-white">
+    <div v-if="isPickerOpen" class="absolute z-10 mt-2 w-full rounded-md bg-white">
       <div
         v-for="ticketStatus in orderedTicketStatuses"
         :key="ticketStatus.id"
         :class="{
-          'border-blue-500': ticketStatus.id === modelValue,
-          'border-transparent': ticketStatus.id !== modelValue,
+          'border-blue-500': ticketStatus.id === ticketStatusId,
+          'border-transparent': ticketStatus.id !== ticketStatusId,
         }"
         class="flex cursor-pointer flex-row items-center justify-start rounded-md border bg-white p-2 hover:border-blue-300 active:border-blue-400"
         @click="() => handleOptionClick(ticketStatus.id)"

@@ -398,6 +398,13 @@ export type MeQuery = {
   } | null
 }
 
+export type UsersQueryVariables = Exact<{ [key: string]: never }>
+
+export type UsersQuery = {
+  __typename?: 'Query'
+  users: Array<{ __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string }>
+}
+
 export type UserQueryVariables = Exact<{
   userId: Scalars['ID']['input']
 }>
@@ -928,6 +935,46 @@ export function useMeLazyQuery(
   return VueApolloComposable.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, {}, options)
 }
 export type MeQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MeQuery, MeQueryVariables>
+export const UsersDocument = gql`
+  query Users {
+    users {
+      id
+      displayName
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+/**
+ * __useUsersQuery__
+ *
+ * To run a query within a Vue component, call `useUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useUsersQuery();
+ */
+export function useUsersQuery(
+  options:
+    | VueApolloComposable.UseQueryOptions<UsersQuery, UsersQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<UsersQuery, UsersQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<UsersQuery, UsersQueryVariables>> = {},
+) {
+  return VueApolloComposable.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, {}, options)
+}
+export function useUsersLazyQuery(
+  options:
+    | VueApolloComposable.UseQueryOptions<UsersQuery, UsersQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<UsersQuery, UsersQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<UsersQuery, UsersQueryVariables>> = {},
+) {
+  return VueApolloComposable.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, {}, options)
+}
+export type UsersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<UsersQuery, UsersQueryVariables>
 export const UserDocument = gql`
   query User($userId: ID!) {
     user(id: $userId) {
