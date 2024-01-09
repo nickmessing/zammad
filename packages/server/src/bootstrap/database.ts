@@ -25,15 +25,17 @@ export async function createDatabaseConnection() {
   }
   const database = drizzle(queryClient, { schema, logger: true })
 
-  await migrate(database, { migrationsFolder: 'drizzle' })
+  if (process.env.NODE_ENV === 'development') {
+    await migrate(database, { migrationsFolder: 'drizzle' })
 
-  const [{ usersCount }] = await database.select({ usersCount: count() }).from(users)
-  const [{ ticketsCount }] = await database.select({ ticketsCount: count() }).from(tickets)
-  const [{ ticketStatusesCount }] = await database.select({ ticketStatusesCount: count() }).from(ticketStatuses)
-  const [{ ticketCommentsCount }] = await database.select({ ticketCommentsCount: count() }).from(ticketComments)
+    const [{ usersCount }] = await database.select({ usersCount: count() }).from(users)
+    const [{ ticketsCount }] = await database.select({ ticketsCount: count() }).from(tickets)
+    const [{ ticketStatusesCount }] = await database.select({ ticketStatusesCount: count() }).from(ticketStatuses)
+    const [{ ticketCommentsCount }] = await database.select({ ticketCommentsCount: count() }).from(ticketComments)
 
-  if (usersCount === 0 && ticketsCount === 0 && ticketStatusesCount === 0 && ticketCommentsCount === 0) {
-    await seedDatabase(database)
+    if (usersCount === 0 && ticketsCount === 0 && ticketStatusesCount === 0 && ticketCommentsCount === 0) {
+      await seedDatabase(database)
+    }
   }
 
   return { database, schema }
