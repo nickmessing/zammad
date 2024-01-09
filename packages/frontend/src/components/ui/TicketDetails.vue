@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mdiCheck, mdiLoading } from '@mdi/js'
-import { refDebounced, useTimeAgo, useTimeoutFn } from '@vueuse/core'
+import { refDebounced, useTimeoutFn } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 
 import Icon from '@/components/atoms/common/Icon.vue'
@@ -8,6 +8,8 @@ import Label from '@/components/atoms/forms/Label.vue'
 import TextInput from '@/components/atoms/forms/TextInput.vue'
 import { useTicketQuery, useUpdateTicketMutation, type UpdateTicketInput, useMeQuery } from '@/generated/graphql'
 import { areObjectsEqual } from '@/utils/common'
+
+import TimeAgo from '../atoms/common/TimeAgo.vue'
 
 import StatusPicker from './StatusPicker.vue'
 import UserIndicator from './UserIndicator.vue'
@@ -23,11 +25,6 @@ const isAuthenticated = computed(() => Boolean(meQueryResult.value?.me))
 const { result: ticketQueryResult } = useTicketQuery(() => ({
   ticketId: props.id,
 }))
-
-const lastModified = useTimeAgo(() => ticketQueryResult.value?.ticket?.updatedAt ?? '', {
-  showSecond: true,
-  updateInterval: 1000,
-})
 
 const dirtyTicketTitle = ref<string>()
 const ticketTitle = computed({
@@ -145,6 +142,9 @@ watch(debouncedUpdateTicketInput, () => {
       <UserIndicator :userId="ticketQueryResult.ticket.author.id" />
     </Label>
     <div class="flex-grow" />
-    <div class="text-sm text-gray-700">Last updated {{ lastModified }}</div>
+    <div class="flex items-center justify-center gap-1 text-sm text-gray-700">
+      Last updated
+      <TimeAgo :date="ticketQueryResult.ticket.updatedAt" />
+    </div>
   </div>
 </template>

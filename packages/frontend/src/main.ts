@@ -1,4 +1,5 @@
 import { DefaultApolloClient } from '@vue/apollo-composable'
+import 'floating-vue/dist/style.css'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 

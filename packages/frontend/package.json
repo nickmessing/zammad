@@ -26,6 +26,7 @@
     "@vue/apollo-composable": "4.0.0-beta.12",
     "@vueuse/core": "^10.7.1",
     "@vueuse/shared": "^10.7.1",
+    "floating-vue": "2.0.0-beta.24",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
     "pinia": "^2.1.7",
