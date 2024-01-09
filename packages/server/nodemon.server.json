@@ -2,7 +2,7 @@
   "execMap": {
     "ts": "tsx"
   },
-  "watch": ["src/", "db/", "development.env"],
+  "watch": ["src/", "db/", ".env.development"],
   "env": {
     "NODE_ENV": "development"
   },

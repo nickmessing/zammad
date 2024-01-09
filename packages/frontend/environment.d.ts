@@ -7,3 +7,12 @@ declare module '*.vue' {
   // eslint-disable-next-line import/no-default-export
   export default component
 }
+
+// eslint-disable-next-line unicorn/prevent-abbreviations
+interface ImportMetaEnv {
+  readonly VITE_APOLLO_URL: string
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
