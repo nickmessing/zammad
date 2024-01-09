@@ -5,10 +5,7 @@
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "types": ["node"]
-  },
-  "ts-node": {
-    "esm": false,
-    "experimentalSpecifierResolution": "node"
+    "types": ["node"],
+    "outDir": "dist"
   }
 }
