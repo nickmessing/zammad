@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from 'vue-router'
 
+import { cache } from '@/apollo/cache'
 import { authorizationToken } from '@/apollo/links/authorization'
 import Button from '@/components/atoms/common/Button.vue'
 import Alerts from '@/components/specific/Alerts.vue'
@@ -9,9 +10,10 @@ import { useUserStore } from '@/stores/user'
 const router = useRouter()
 const userStore = useUserStore()
 
-function logout() {
+async function logout() {
   authorizationToken.value = ''
-  void router.push({ name: 'Home' })
+  await cache.reset()
+  await router.push({ name: 'Home' })
 }
 </script>
 

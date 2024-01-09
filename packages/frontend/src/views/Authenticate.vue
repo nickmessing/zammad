@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { cache } from '@/apollo/cache'
 import { authorizationToken } from '@/apollo/links/authorization'
 import Button from '@/components/atoms/common/Button.vue'
 import Heading from '@/components/atoms/common/Heading.vue'
@@ -19,10 +20,11 @@ const { mutate, loading, onDone } = useAuthenticateMutation(() => ({
   },
 }))
 
-onDone(({ data }) => {
+onDone(async ({ data }) => {
   if (data?.authenticate?.token) {
     authorizationToken.value = data.authenticate.token
-    void router.push({ name: 'Home' })
+    await cache.reset()
+    await router.push({ name: 'Home' })
   }
 })
 </script>

@@ -42,6 +42,7 @@ export async function createApollo({ database, schema }: { database: Database; s
         })
 
         if (user) {
+          res.setHeader('Access-Control-Expose-Headers', 'X-Renew-Token')
           res.setHeader('X-Renew-Token', await createToken(user))
         }
       }

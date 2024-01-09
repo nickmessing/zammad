@@ -2,6 +2,7 @@
 import { mdiKeyboardReturn, mdiKeyboardEsc } from '@mdi/js'
 import { computed, ref, watch } from 'vue'
 
+import { cache } from '@/apollo/cache'
 import { authorizationToken } from '@/apollo/links/authorization'
 import Icon from '@/components/atoms/common/Icon.vue'
 import KeyboardButton from '@/components/atoms/common/KeyboardButton.vue'
@@ -32,7 +33,7 @@ const {
     displayName: displayName.value,
   },
 }))
-onDone(({ data }) => {
+onDone(async ({ data }) => {
   const newToken = data?.updateDisplayName?.token
 
   if (!newToken) {
@@ -40,6 +41,7 @@ onDone(({ data }) => {
   }
 
   authorizationToken.value = newToken
+  await cache.reset()
 })
 
 const isKeyboardInstructionVisible = computed(
