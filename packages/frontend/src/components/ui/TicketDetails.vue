@@ -6,7 +6,8 @@ import { computed, ref, watch } from 'vue'
 import Icon from '@/components/atoms/common/Icon.vue'
 import Label from '@/components/atoms/forms/Label.vue'
 import TextInput from '@/components/atoms/forms/TextInput.vue'
-import { useTicketQuery, useUpdateTicketMutation, type UpdateTicketInput, useMeQuery } from '@/generated/graphql'
+import { useTicketQuery, useUpdateTicketMutation, type UpdateTicketInput } from '@/generated/graphql'
+import { useUserStore } from '@/stores/user'
 import { areObjectsEqual } from '@/utils/common'
 
 import TimeAgo from '../atoms/common/TimeAgo.vue'
@@ -19,8 +20,7 @@ const props = defineProps<{
   id: string
 }>()
 
-const { result: meQueryResult } = useMeQuery()
-const isAuthenticated = computed(() => Boolean(meQueryResult.value?.me))
+const userStore = useUserStore()
 
 const { result: ticketQueryResult } = useTicketQuery(() => ({
   ticketId: props.id,
@@ -122,20 +122,25 @@ watch(debouncedUpdateTicketInput, () => {
     </Transition>
     <Label>
       <template #label> Title </template>
-      <TextInput v-model="ticketTitle" :isDisabled="!isAuthenticated" name="ticketTitle" />
+      <TextInput v-model="ticketTitle" :isDisabled="!userStore.isAuthenticated" name="ticketTitle" />
     </Label>
     <!-- TODO: Replace with a rich text editor -->
     <Label>
       <template #label> Description </template>
-      <TextInput v-model="ticketDescription" :isDisabled="!isAuthenticated" name="ticketDescription" isTextarea />
+      <TextInput
+        v-model="ticketDescription"
+        :isDisabled="!userStore.isAuthenticated"
+        name="ticketDescription"
+        isTextarea
+      />
     </Label>
     <Label isNoPointerCursor>
       <template #label> Status </template>
-      <StatusPicker v-model:ticketStatusId="ticketStatusId" :isDisabled="!isAuthenticated" />
+      <StatusPicker v-model:ticketStatusId="ticketStatusId" :isDisabled="!userStore.isAuthenticated" />
     </Label>
     <Label isNoPointerCursor>
       <template #label> Assignee </template>
-      <UserPicker v-model:userId="ticketAssigneeId" :isDisabled="!isAuthenticated" />
+      <UserPicker v-model:userId="ticketAssigneeId" :isDisabled="!userStore.isAuthenticated" />
     </Label>
     <Label isNoPointerCursor>
       <template #label> Author </template>

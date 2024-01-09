@@ -8,7 +8,8 @@ import KeyboardButton from '@/components/atoms/common/KeyboardButton.vue'
 import Label from '@/components/atoms/forms/Label.vue'
 import TextInput from '@/components/atoms/forms/TextInput.vue'
 import Avatar from '@/components/core/user/Avatar.vue'
-import { useMeQuery, useUpdateDisplayNameMutation, useUserQuery } from '@/generated/graphql'
+import { useUpdateDisplayNameMutation, useUserQuery } from '@/generated/graphql'
+import { useUserStore } from '@/stores/user'
 
 const props = defineProps<{
   userId: string
@@ -20,7 +21,7 @@ const isDisplayNameFocused = ref(false)
 const { result: userQueryResult, loading: isUserQueryLoading } = useUserQuery(() => ({
   userId: props.userId,
 }))
-const { result: meQueryResult, loading: isMeQueryLoading } = useMeQuery()
+const userStore = useUserStore()
 
 const {
   mutate: updateDisplayName,
@@ -45,15 +46,15 @@ const isKeyboardInstructionVisible = computed(
   () =>
     isDisplayNameFocused.value &&
     !isUserQueryLoading.value &&
-    !isMeQueryLoading.value &&
+    !userStore.isLoading &&
     userQueryResult.value?.user?.displayName !== displayName.value,
 )
 const isDisplayNameInputDisabled = computed(
   () =>
     isUserQueryLoading.value ||
-    isMeQueryLoading.value ||
+    userStore.isLoading ||
     isUpdateDisplayNameMutationLoading.value ||
-    userQueryResult.value?.user?.id !== meQueryResult.value?.me?.id,
+    userQueryResult.value?.user?.id !== userStore.userId,
 )
 
 watch(
