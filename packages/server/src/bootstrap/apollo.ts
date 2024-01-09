@@ -1,6 +1,5 @@
 import { readFile, readdir } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
 
 import { ApolloServer } from '@apollo/server'
 import { startStandaloneServer } from '@apollo/server/standalone'
@@ -13,7 +12,7 @@ import type { Database, Schema } from './database'
 import type { ApolloContext } from '../types/apollo'
 import type { TokenInfo } from '../utils/jwt'
 
-const graphqlFolder = resolve(fileURLToPath(import.meta.url), '../../graphql')
+const graphqlFolder = resolve(process.cwd(), './src/graphql')
 
 export async function createApollo({ database, schema }: { database: Database; schema: Schema }) {
   const files = await readdir(graphqlFolder)

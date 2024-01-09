@@ -14,7 +14,7 @@
     "dev:generate:graphql": "nodemon --config nodemon.graphql.json",
     "dev:generate:drizzle": "nodemon --config nodemon.drizzle.json",
     "dev:generate": "run-p -l dev:generate:graphql dev:generate:drizzle",
-    "dev:server": "nodemon --config nodemon.server.json",
+    "dev:server": "nodemon --config nodemon.server.json src/main.ts",
     "dev": "run-p -l dev:server dev:generate",
     "build": "pkgroll",
     "start": "node dist/main.mjs"
