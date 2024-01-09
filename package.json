@@ -9,7 +9,7 @@
     "lint:frontend": "cd packages/frontend && pnpm lint",
     "lint:server": "cd packages/server && pnpm lint",
     "lint": "run-s -l lint:*",
-    "build:frontend": "cd packages/frontend && pnpm build",
+    "build:frontend": "cd packages/frontend && pnpm build-only",
     "build:server": "cd packages/server && pnpm build",
     "build": "run-s -l build:*",
     "start:server": "cd packages/server && pnpm start"
