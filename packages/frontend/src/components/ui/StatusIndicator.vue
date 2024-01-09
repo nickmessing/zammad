@@ -5,6 +5,7 @@ import { useTicketStatusBaseQuery } from '@/generated/graphql'
 
 const props = defineProps<{
   ticketStatusId: string
+  isClickable?: boolean
 }>()
 
 const { result: ticketStatusBaseQueryResult } = useTicketStatusBaseQuery(() => ({

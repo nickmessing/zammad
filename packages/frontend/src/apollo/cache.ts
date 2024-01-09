@@ -31,6 +31,20 @@ export const cache = new InMemoryCache({
         },
       },
     },
+    TicketStatus: {
+      fields: {
+        tickets: {
+          keyArgs: false,
+          merge(existing: TicketConnection | undefined, incoming: TicketConnection) {
+            return {
+              ...existing,
+              ...incoming,
+              items: [...(existing?.items ?? []), ...incoming.items],
+            }
+          },
+        },
+      },
+    },
   },
 })
 

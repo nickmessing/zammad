@@ -45,15 +45,15 @@ const displayName = computed(() =>
   <Component
     :is="elementName"
     v-if="displayName"
-    class="flex flex-grow flex-row items-center gap-2"
+    class="flex grow flex-row items-center gap-2"
     v-bind="extraParameters"
   >
-    <Avatar :userId="props.userId" class="flex-shrink-0" />
-    <div class="flex-shrink-0">
+    <Avatar :userId="props.userId" class="shrink-0" />
+    <div class="shrink-0">
       {{ displayName }}
     </div>
-    <div class="flex-grow" />
-    <div class="flex-shrink-0">
+    <div class="grow" />
+    <div class="shrink-0">
       <slot />
     </div>
   </Component>

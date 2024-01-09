@@ -101,7 +101,7 @@ watch(isLoadingSpinnerContainerVisible, isVisible => {
 </script>
 
 <template>
-  <div class="flex flex-grow flex-col gap-2 overflow-auto">
+  <div class="flex grow flex-col gap-2 overflow-auto">
     <TicketCard v-for="ticket in tickets" :key="ticket.id" :ticketId="ticket.id" />
     <div
       v-if="isLoadMorePossible || isLoading"

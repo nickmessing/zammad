@@ -316,6 +316,28 @@ export type UserCreatedTicketsQuery = {
   } | null
 }
 
+export type TicketStatusTicketsQueryVariables = Exact<{
+  ticketStatusId: Scalars['ID']['input']
+  first: Scalars['Int']['input']
+  after?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type TicketStatusTicketsQuery = {
+  __typename?: 'Query'
+  ticketStatus?: {
+    __typename?: 'TicketStatus'
+    id: string
+    createdAt: string
+    updatedAt: string
+    tickets: {
+      __typename?: 'TicketConnection'
+      totalCount: number
+      endCursor?: string | null
+      items: Array<{ __typename?: 'Ticket'; id: string; createdAt: string; updatedAt: string }>
+    }
+  } | null
+}
+
 export type UserAssignedTicketsQueryVariables = Exact<{
   userId: Scalars['ID']['input']
   first: Scalars['Int']['input']
@@ -620,6 +642,86 @@ export function useUserCreatedTicketsLazyQuery(
 export type UserCreatedTicketsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
   UserCreatedTicketsQuery,
   UserCreatedTicketsQueryVariables
+>
+export const TicketStatusTicketsDocument = gql`
+  query TicketStatusTickets($ticketStatusId: ID!, $first: Int!, $after: String) {
+    ticketStatus(id: $ticketStatusId) {
+      id
+      createdAt
+      updatedAt
+      tickets(first: $first, after: $after) {
+        totalCount
+        endCursor
+        items {
+          id
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useTicketStatusTicketsQuery__
+ *
+ * To run a query within a Vue component, call `useTicketStatusTicketsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTicketStatusTicketsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useTicketStatusTicketsQuery({
+ *   ticketStatusId: // value for 'ticketStatusId'
+ *   first: // value for 'first'
+ *   after: // value for 'after'
+ * });
+ */
+export function useTicketStatusTicketsQuery(
+  variables:
+    | TicketStatusTicketsQueryVariables
+    | VueCompositionApi.Ref<TicketStatusTicketsQueryVariables>
+    | ReactiveFunction<TicketStatusTicketsQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<TicketStatusTicketsQuery, TicketStatusTicketsQueryVariables>
+    | VueCompositionApi.Ref<
+        VueApolloComposable.UseQueryOptions<TicketStatusTicketsQuery, TicketStatusTicketsQueryVariables>
+      >
+    | ReactiveFunction<
+        VueApolloComposable.UseQueryOptions<TicketStatusTicketsQuery, TicketStatusTicketsQueryVariables>
+      > = {},
+) {
+  return VueApolloComposable.useQuery<TicketStatusTicketsQuery, TicketStatusTicketsQueryVariables>(
+    TicketStatusTicketsDocument,
+    variables,
+    options,
+  )
+}
+export function useTicketStatusTicketsLazyQuery(
+  variables:
+    | TicketStatusTicketsQueryVariables
+    | VueCompositionApi.Ref<TicketStatusTicketsQueryVariables>
+    | ReactiveFunction<TicketStatusTicketsQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<TicketStatusTicketsQuery, TicketStatusTicketsQueryVariables>
+    | VueCompositionApi.Ref<
+        VueApolloComposable.UseQueryOptions<TicketStatusTicketsQuery, TicketStatusTicketsQueryVariables>
+      >
+    | ReactiveFunction<
+        VueApolloComposable.UseQueryOptions<TicketStatusTicketsQuery, TicketStatusTicketsQueryVariables>
+      > = {},
+) {
+  return VueApolloComposable.useLazyQuery<TicketStatusTicketsQuery, TicketStatusTicketsQueryVariables>(
+    TicketStatusTicketsDocument,
+    variables,
+    options,
+  )
+}
+export type TicketStatusTicketsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+  TicketStatusTicketsQuery,
+  TicketStatusTicketsQueryVariables
 >
 export const UserAssignedTicketsDocument = gql`
   query UserAssignedTickets($userId: ID!, $first: Int!, $after: String) {

@@ -40,6 +40,24 @@ query UserCreatedTickets($userId: ID!, $first: Int!, $after: String) {
   }
 }
 
+query TicketStatusTickets($ticketStatusId: ID!, $first: Int!, $after: String) {
+  ticketStatus(id: $ticketStatusId) {
+    id
+    createdAt
+    updatedAt
+    tickets(first: $first, after: $after) {
+      totalCount
+      endCursor
+      items {
+        id
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
+
+
 query UserAssignedTickets($userId: ID!, $first: Int!, $after: String) {
   user(id: $userId) {
     id

@@ -20,13 +20,14 @@ function logout() {
     <div class="mx-auto px-8">
       <div class="relative flex h-16 items-center justify-between">
         <div class="flex flex-1 items-center justify-center gap-10 sm:items-stretch sm:justify-start">
-          <div class="flex flex-shrink-0 items-center gap-3">
+          <div class="flex shrink-0 items-center gap-3">
             <img class="h-14 w-14" src="@/assets/logo.svg" />
             <img src="@/assets/logotype.svg" />
           </div>
-          <div class="flex flex-grow items-center">
+          <div class="flex grow items-center">
             <div class="flex gap-3">
               <Button :to="{ name: 'Home' }" theme="nav" isActiveClassOnExactMatch> Home </Button>
+              <Button :to="{ name: 'Tickets' }" theme="nav"> Tickets </Button>
               <Button v-if="userStore.isNotAuthenticated" :to="{ name: 'Authenticate' }" theme="nav">
                 Authenticate
               </Button>
