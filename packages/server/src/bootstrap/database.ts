@@ -11,7 +11,9 @@ import { users, usersRelations } from '../../db/schema/users'
 import { seedDatabase } from './seedDatabase'
 
 export async function createDatabaseConnection() {
-  const connectionString = `postgres://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`
+  const connectionString =
+    process.env.DATABASE_URL ??
+    `postgres://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`
   const queryClient = postgres(connectionString)
   const schema = {
     ticketComments,
