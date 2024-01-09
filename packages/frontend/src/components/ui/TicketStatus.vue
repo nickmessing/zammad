@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { useToggle } from '@vueuse/shared'
+import { ref } from 'vue'
+
+import { useUserStore } from '@/stores/user'
 
 import Heading from '../atoms/common/Heading.vue'
 
@@ -10,7 +13,12 @@ import TicketStatusTickets from './TicketStatusTickets.vue'
 const props = defineProps<{
   ticketStatusId: string
 }>()
-const [isEditingTicketStatus, toggleIsEditingTicketStatus] = useToggle(false)
+
+const userStore = useUserStore()
+const isEditingTicketStatus = ref(false)
+function toggleIsEditingTicketStatus(value?: boolean) {
+  isEditingTicketStatus.value = userStore.isAuthenticated ? value ?? !isEditingTicketStatus.value : false
+}
 </script>
 
 <template>
@@ -24,7 +32,7 @@ const [isEditingTicketStatus, toggleIsEditingTicketStatus] = useToggle(false)
       <StatusIndicator
         v-else
         :ticketStatusId="props.ticketStatusId"
-        isClickable
+        :isClickable="userStore.isAuthenticated"
         @click="() => toggleIsEditingTicketStatus(true)"
       />
     </Heading>
