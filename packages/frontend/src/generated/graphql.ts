@@ -360,6 +360,26 @@ export type UserAssignedTicketsQuery = {
   } | null
 }
 
+export type UpdateTicketStatusMutationVariables = Exact<{
+  ticketStatusId: Scalars['ID']['input']
+  input: UpdateTicketStatusInput
+}>
+
+export type UpdateTicketStatusMutation = {
+  __typename?: 'Mutation'
+  ticketStatus: {
+    __typename?: 'TicketStatusMutation'
+    update: {
+      __typename?: 'TicketStatus'
+      id: string
+      name: string
+      createdAt: string
+      updatedAt: string
+      colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
+    }
+  }
+}
+
 export type TicketStatusesQueryVariables = Exact<{ [key: string]: never }>
 
 export type TicketStatusesQuery = {
@@ -802,6 +822,57 @@ export function useUserAssignedTicketsLazyQuery(
 export type UserAssignedTicketsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
   UserAssignedTicketsQuery,
   UserAssignedTicketsQueryVariables
+>
+export const UpdateTicketStatusDocument = gql`
+  mutation UpdateTicketStatus($ticketStatusId: ID!, $input: UpdateTicketStatusInput!) {
+    ticketStatus(id: $ticketStatusId) {
+      update(input: $input) {
+        id
+        name
+        createdAt
+        updatedAt
+        colorBase {
+          hue
+          saturation
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useUpdateTicketStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateTicketStatusMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTicketStatusMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateTicketStatusMutation({
+ *   variables: {
+ *     ticketStatusId: // value for 'ticketStatusId'
+ *     input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateTicketStatusMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<UpdateTicketStatusMutation, UpdateTicketStatusMutationVariables>
+    | ReactiveFunction<
+        VueApolloComposable.UseMutationOptions<UpdateTicketStatusMutation, UpdateTicketStatusMutationVariables>
+      > = {},
+) {
+  return VueApolloComposable.useMutation<UpdateTicketStatusMutation, UpdateTicketStatusMutationVariables>(
+    UpdateTicketStatusDocument,
+    options,
+  )
+}
+export type UpdateTicketStatusMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
+  UpdateTicketStatusMutation,
+  UpdateTicketStatusMutationVariables
 >
 export const TicketStatusesDocument = gql`
   query TicketStatuses {

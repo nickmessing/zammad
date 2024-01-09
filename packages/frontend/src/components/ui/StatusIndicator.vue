@@ -3,9 +3,17 @@ import { computed } from 'vue'
 
 import { useTicketStatusBaseQuery } from '@/generated/graphql'
 
-const props = defineProps<{
-  ticketStatusId: string
-  isClickable?: boolean
+const props = withDefaults(
+  defineProps<{
+    ticketStatusId: string
+    isClickable?: boolean
+  }>(),
+  {
+    isClickable: false,
+  },
+)
+const emit = defineEmits<{
+  click: [event: MouseEvent]
 }>()
 
 const { result: ticketStatusBaseQueryResult } = useTicketStatusBaseQuery(() => ({
@@ -17,7 +25,12 @@ const saturation = computed(() => ticketStatusBaseQueryResult.value?.ticketStatu
 </script>
 
 <template>
-  <div v-if="ticketStatusBaseQueryResult?.ticketStatus" class="flex flex-row items-center gap-2">
+  <div
+    v-if="ticketStatusBaseQueryResult?.ticketStatus"
+    :class="{ 'cursor-pointer': props.isClickable }"
+    class="flex flex-row items-center gap-2"
+    @click="event => emit('click', event)"
+  >
     <div class="ticket-status-indicator h-4 w-4 rounded-full border" />
     <div>
       {{ ticketStatusBaseQueryResult.ticketStatus.name }}

@@ -1,0 +1,14 @@
+mutation UpdateTicketStatus($ticketStatusId: ID!, $input: UpdateTicketStatusInput!) {
+  ticketStatus(id: $ticketStatusId) {
+    update(input: $input) {
+      id
+      name
+      createdAt
+      updatedAt
+      colorBase {
+        hue
+        saturation
+      }
+    }
+  }
+}
