@@ -1,4 +1,4 @@
-import { desc, eq } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 
 import { assertUserIsAuthenticated } from '../../utils/assertions'
@@ -39,52 +39,7 @@ export const update = (async (parent, input, { database, schema, tokenInfo }) =>
     updatePayload.colorSaturation = updateTicketStatusInput.colorBase.saturation
   }
   if (updateTicketStatusInput.order != undefined && updateTicketStatusInput.order !== parent.order) {
-    const orders = await database
-      .select({ order: schema.ticketStatuses.order })
-      .from(schema.ticketStatuses)
-      .orderBy(desc(schema.ticketStatuses.order))
-      .limit(1)
-    const largestOrder = orders[0]?.order ?? 0
-
-    const newOrder = Math.min(updateTicketStatusInput.order, largestOrder)
-    const oldOrder = parent.order
-    const isNewOrderBigger = newOrder > oldOrder
-
-    if (isNewOrderBigger) {
-      const ticketStatusesToUpdateOrder = await database.query.ticketStatuses.findMany({
-        where: (ticketStatuses, { gt, lte, and }) =>
-          and(gt(ticketStatuses.order, oldOrder), lte(ticketStatuses.order, newOrder)),
-      })
-      await Promise.all(
-        ticketStatusesToUpdateOrder.map(ticketStatusToUpdateOrder =>
-          database
-            .update(schema.ticketStatuses)
-            .set({
-              order: ticketStatusToUpdateOrder.order - 1,
-              updatedAt: new Date(),
-            })
-            .where(eq(schema.ticketStatuses.id, ticketStatusToUpdateOrder.id)),
-        ),
-      )
-    } else {
-      const ticketStatusesToUpdateOrder = await database.query.ticketStatuses.findMany({
-        where: (ticketStatuses, { lt, gte, and }) =>
-          and(lt(ticketStatuses.order, oldOrder), gte(ticketStatuses.order, newOrder)),
-      })
-      await Promise.all(
-        ticketStatusesToUpdateOrder.map(ticketStatusToUpdateOrder =>
-          database
-            .update(schema.ticketStatuses)
-            .set({
-              order: ticketStatusToUpdateOrder.order + 1,
-              updatedAt: new Date(),
-            })
-            .where(eq(schema.ticketStatuses.id, ticketStatusToUpdateOrder.id)),
-        ),
-      )
-    }
-
-    updatePayload.order = newOrder
+    updatePayload.order = updateTicketStatusInput.order
   }
 
   if (Object.keys(updatePayload).length === 0) {
