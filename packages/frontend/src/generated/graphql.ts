@@ -437,6 +437,23 @@ export type UserAssignedTicketsQuery = {
   } | null
 }
 
+export type CreateTicketStatusMutationVariables = Exact<{
+  input: CreateTicketStatusInput
+}>
+
+export type CreateTicketStatusMutation = {
+  __typename?: 'Mutation'
+  createTicketStatus: {
+    __typename?: 'TicketStatus'
+    id: string
+    name: string
+    order: number
+    createdAt: string
+    updatedAt: string
+    colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
+  }
+}
+
 export type UpdateTicketStatusMutationVariables = Exact<{
   ticketStatusId: Scalars['ID']['input']
   input: UpdateTicketStatusInput
@@ -455,6 +472,16 @@ export type UpdateTicketStatusMutation = {
       colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
     }
   }
+}
+
+export type TicketStatusDetailsForListFragment = {
+  __typename?: 'TicketStatus'
+  id: string
+  name: string
+  order: number
+  createdAt: string
+  updatedAt: string
+  colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
 }
 
 export type TicketStatusesQueryVariables = Exact<{ [key: string]: never }>
@@ -572,6 +599,19 @@ export const GenericTicketFragmentDoc = gql`
       createdAt
       updatedAt
     }
+  }
+`
+export const TicketStatusDetailsForListFragmentDoc = gql`
+  fragment TicketStatusDetailsForList on TicketStatus {
+    id
+    name
+    order
+    colorBase {
+      hue
+      saturation
+    }
+    createdAt
+    updatedAt
   }
 `
 export const UpdateTicketDocument = gql`
@@ -912,6 +952,48 @@ export type UserAssignedTicketsQueryCompositionFunctionResult = VueApolloComposa
   UserAssignedTicketsQuery,
   UserAssignedTicketsQueryVariables
 >
+export const CreateTicketStatusDocument = gql`
+  mutation CreateTicketStatus($input: CreateTicketStatusInput!) {
+    createTicketStatus(input: $input) {
+      ...TicketStatusDetailsForList
+    }
+  }
+  ${TicketStatusDetailsForListFragmentDoc}
+`
+
+/**
+ * __useCreateTicketStatusMutation__
+ *
+ * To run a mutation, you first call `useCreateTicketStatusMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTicketStatusMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useCreateTicketStatusMutation({
+ *   variables: {
+ *     input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateTicketStatusMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<CreateTicketStatusMutation, CreateTicketStatusMutationVariables>
+    | ReactiveFunction<
+        VueApolloComposable.UseMutationOptions<CreateTicketStatusMutation, CreateTicketStatusMutationVariables>
+      > = {},
+) {
+  return VueApolloComposable.useMutation<CreateTicketStatusMutation, CreateTicketStatusMutationVariables>(
+    CreateTicketStatusDocument,
+    options,
+  )
+}
+export type CreateTicketStatusMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
+  CreateTicketStatusMutation,
+  CreateTicketStatusMutationVariables
+>
 export const UpdateTicketStatusDocument = gql`
   mutation UpdateTicketStatus($ticketStatusId: ID!, $input: UpdateTicketStatusInput!) {
     ticketStatus(id: $ticketStatusId) {
@@ -966,17 +1048,10 @@ export type UpdateTicketStatusMutationCompositionFunctionResult = VueApolloCompo
 export const TicketStatusesDocument = gql`
   query TicketStatuses {
     ticketStatuses {
-      id
-      name
-      order
-      colorBase {
-        hue
-        saturation
-      }
-      createdAt
-      updatedAt
+      ...TicketStatusDetailsForList
     }
   }
+  ${TicketStatusDetailsForListFragmentDoc}
 `
 
 /**

@@ -1,14 +1,18 @@
+fragment TicketStatusDetailsForList on TicketStatus {
+  id
+  name
+  order
+  colorBase {
+    hue
+    saturation
+  }
+  createdAt
+  updatedAt
+}
+
 query TicketStatuses {
   ticketStatuses {
-    id
-    name
-    order
-    colorBase {
-      hue
-      saturation
-    }
-    createdAt
-    updatedAt
+    ...TicketStatusDetailsForList
   }
 }
 

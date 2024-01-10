@@ -1,3 +1,9 @@
+mutation CreateTicketStatus($input: CreateTicketStatusInput!) {
+  createTicketStatus(input: $input) {
+    ...TicketStatusDetailsForList
+  }
+}
+
 mutation UpdateTicketStatus($ticketStatusId: ID!, $input: UpdateTicketStatusInput!) {
   ticketStatus(id: $ticketStatusId) {
     update(input: $input) {
