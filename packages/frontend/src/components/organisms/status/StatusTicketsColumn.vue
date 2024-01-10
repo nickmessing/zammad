@@ -1,136 +1,88 @@
 <script setup lang="ts">
-import { whenever } from '@vueuse/shared'
 import { computed, ref } from 'vue'
 
-import ZammadButton from '@/components/atoms/common/ZammadButton.vue'
 import ZammadColumn from '@/components/atoms/common/ZammadColumn.vue'
-import ZammadHeading from '@/components/atoms/common/ZammadHeading.vue'
-import TextInput from '@/components/atoms/forms/TextInput.vue'
-import ColorPicker from '@/components/molecules/forms/ColorPicker.vue'
-import StatusIndicator from '@/components/molecules/status/StatusIndicator.vue'
-import {
-  useTicketStatusQuery,
-  type ColorBase,
-  type UpdateTicketStatusInput,
-  useUpdateTicketStatusMutation,
-} from '@/generated/graphql'
-import { useUserStore } from '@/stores/user'
 
-import StatusRemoval from './StatusRemoval.vue'
 import StatusTicketList from './StatusTicketList.vue'
+import StatusTicketsColumnHeading from './StatusTicketsColumnHeading.vue'
+
+import type { Coordinates } from '@/types/common'
 
 const props = defineProps<{
   ticketStatusId: string
+  isDragging?: boolean
+  mouseCoordinates?: Coordinates
+  isDroppingToTheRight?: boolean
+  isDroppingToTheLeft?: boolean
+}>()
+const emit = defineEmits<{
+  dragStart: [event: MouseEvent]
 }>()
 
-const userStore = useUserStore()
+const columnContainerReference = ref<HTMLDivElement>()
+const offset = ref<Coordinates>()
 
-const { result: ticketStatusQueryResult } = useTicketStatusQuery(() => ({
-  ticketStatusId: props.ticketStatusId,
-}))
+function handleDragStart({ coordinates, event }: { coordinates: Coordinates; event: MouseEvent }) {
+  if (columnContainerReference.value == undefined) {
+    return
+  }
 
-const isEditingTicketStatus = ref(false)
-function toggleIsEditingTicketStatus(value?: boolean) {
-  isEditingTicketStatus.value = userStore.isAuthenticated ? value ?? !isEditingTicketStatus.value : false
+  const clientRect = columnContainerReference.value.getBoundingClientRect()
+  offset.value = {
+    x: coordinates.x - clientRect.left,
+    y: coordinates.y - clientRect.top,
+  }
+
+  emit('dragStart', event)
 }
 
-const dirtyTicketStatusName = ref<string>()
-const ticketStatusName = computed({
-  get: () => dirtyTicketStatusName.value ?? ticketStatusQueryResult.value?.ticketStatus?.name ?? '',
-  set: value => (dirtyTicketStatusName.value = value),
-})
-
-const dirtyColorBase = ref<ColorBase>()
-const colorBase = computed({
-  get: () =>
-    dirtyColorBase.value ?? ticketStatusQueryResult.value?.ticketStatus?.colorBase ?? { hue: 0, saturation: 0 },
-  // Have to extract only "hue" and "saturation" from the colorBase because there is also __typename in the back-end response
-  set: value =>
-    (dirtyColorBase.value = {
-      hue: value.hue,
-      saturation: value.saturation,
-    }),
-})
-
-whenever(
-  () => !isEditingTicketStatus.value,
-  () => {
-    dirtyTicketStatusName.value = undefined
-    dirtyColorBase.value = undefined
-  },
-)
-
-const ticketStatusUpdatedInput = computed<UpdateTicketStatusInput>(() => {
-  const data: UpdateTicketStatusInput = {}
-
-  if (
-    dirtyTicketStatusName.value != undefined &&
-    dirtyTicketStatusName.value !== ticketStatusQueryResult.value?.ticketStatus?.name
-  ) {
-    data.name = dirtyTicketStatusName.value
+const top = computed(() => {
+  if (props.mouseCoordinates == undefined || offset.value == undefined) {
+    return
   }
 
-  if (
-    dirtyColorBase.value != undefined &&
-    (dirtyColorBase.value.hue !== ticketStatusQueryResult.value?.ticketStatus?.colorBase.hue ||
-      dirtyColorBase.value.saturation !== ticketStatusQueryResult.value?.ticketStatus?.colorBase.saturation)
-  ) {
-    data.colorBase = dirtyColorBase.value
-  }
-
-  return data
+  return props.mouseCoordinates.y - offset.value.y
 })
 
-const {
-  mutate: updateTicketStatus,
-  loading: isUpdateTicketStatusMutationLoading,
-  onDone,
-} = useUpdateTicketStatusMutation(() => ({
-  variables: {
-    ticketStatusId: props.ticketStatusId,
-    input: ticketStatusUpdatedInput.value,
-  },
-}))
+const left = computed(() => {
+  if (props.mouseCoordinates == undefined || offset.value == undefined) {
+    return
+  }
 
-onDone(() => {
-  toggleIsEditingTicketStatus(false)
+  return props.mouseCoordinates.x - offset.value.x
 })
 </script>
 
 <template>
-  <ZammadColumn v-if="ticketStatusQueryResult?.ticketStatus" class="w-96 shrink-0 grow-0">
-    <ZammadHeading>
-      <div v-if="isEditingTicketStatus" class="flex flex-col items-stretch gap-2">
-        <TextInput v-model="ticketStatusName" />
-        <ColorPicker v-model:colorBase="colorBase" />
-        <div class="flex flex-row gap-2">
-          <ZammadButton
-            :isDisabled="isUpdateTicketStatusMutationLoading"
-            class="grow"
-            @click="() => toggleIsEditingTicketStatus(false)"
-          >
-            Cancel
-          </ZammadButton>
-          <ZammadButton
-            :isDisabled="isUpdateTicketStatusMutationLoading"
-            class="grow"
-            theme="primary"
-            @click="() => updateTicketStatus()"
-          >
-            Save
-          </ZammadButton>
-        </div>
-      </div>
-      <div v-else class="flex flex-row items-center gap-2">
-        <StatusIndicator
-          :status="ticketStatusQueryResult.ticketStatus"
-          class="grow"
-          isClickable
-          @click="() => toggleIsEditingTicketStatus(true)"
-        />
-        <StatusRemoval :status="ticketStatusQueryResult.ticketStatus" />
-      </div>
-    </ZammadHeading>
-    <StatusTicketList :ticketStatusId="props.ticketStatusId" />
-  </ZammadColumn>
+  <div
+    ref="columnContainerReference"
+    :class="{
+      'rounded bg-slate-200 p-4 shadow-xl': props.isDragging,
+      '-translate-x-8': !props.isDragging && props.isDroppingToTheRight,
+      'translate-x-8': !props.isDragging && props.isDroppingToTheLeft,
+    }"
+    class="flex w-96 shrink-0 grow-0 transition-transform"
+  >
+    <ZammadColumn
+      :class="{ 'dragging absolute z-10 transform opacity-80': props.isDragging }"
+      class="w-96 overflow-hidden transition-opacity"
+    >
+      <StatusTicketsColumnHeading
+        :isDragging="props.isDragging"
+        :ticketStatusId="props.ticketStatusId"
+        @dragStart="handleDragStart"
+      />
+      <StatusTicketList :ticketStatusId="props.ticketStatusId" />
+    </ZammadColumn>
+  </div>
 </template>
+
+<style scoped lang="less">
+.dragging {
+  top: 0;
+  left: 0;
+
+  --tw-translate-x: calc(v-bind(left) * 1px);
+  --tw-translate-y: calc(v-bind(top) * 1px);
+}
+</style>

@@ -19,6 +19,10 @@ const props = withDefaults(
   },
 )
 
+const emit = defineEmits<{
+  mousedown: [event: MouseEvent]
+}>()
+
 const styles = computed(() => ({
   '--sx': ['both', 'horizontal'].includes(props.flip) ? '-1' : '1',
   '--sy': ['both', 'vertical'].includes(props.flip) ? '-1' : '1',
@@ -27,7 +31,13 @@ const styles = computed(() => ({
 </script>
 
 <template>
-  <svg :width="props.size" :height="props.size" :viewBox="props.viewBox" :style="styles">
+  <svg
+    :width="props.size"
+    :height="props.size"
+    :viewBox="props.viewBox"
+    :style="styles"
+    @mousedown="event => emit('mousedown', event)"
+  >
     <path :d="path" />
   </svg>
 </template>

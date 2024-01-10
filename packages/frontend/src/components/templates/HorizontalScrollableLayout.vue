@@ -1,11 +1,19 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineSlots<{
   default(): unknown
 }>()
+
+const element = ref<HTMLDivElement>()
+
+defineExpose({
+  element,
+})
 </script>
 
 <template>
-  <div class="flex grow flex-row gap-8 overflow-auto p-8">
+  <div ref="element" class="flex grow flex-row gap-8 overflow-auto p-8">
     <slot />
   </div>
 </template>

@@ -8,12 +8,11 @@ import TextInput from '@/components/atoms/forms/TextInput.vue'
 import ZammadLabel from '@/components/atoms/forms/ZammadLabel.vue'
 import TimeAgo from '@/components/molecules/date-time/TimeAgo.vue'
 import UserIndicator from '@/components/molecules/user/UserIndicator.vue'
+import StatusPicker from '@/components/organisms/status/StatusPicker.vue'
+import UserPicker from '@/components/organisms/user/UserPicker.vue'
 import { useTicketQuery, type UpdateTicketInput, useUpdateTicketMutation } from '@/generated/graphql'
 import { useUserStore } from '@/stores/user'
 import { areObjectsEqual } from '@/utils/common'
-
-import StatusPicker from '../status/StatusPicker.vue'
-import UserPicker from '../user/UserPicker.vue'
 
 const props = defineProps<{
   ticketId: string

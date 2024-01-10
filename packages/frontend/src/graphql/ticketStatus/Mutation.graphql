@@ -19,6 +19,14 @@ mutation UpdateTicketStatus($ticketStatusId: ID!, $input: UpdateTicketStatusInpu
   }
 }
 
+mutation UpdateStatusesOrder($ids: [ID!]!) {
+  updateStatusesOrder(ids: $ids) {
+    id
+    order
+    updatedAt
+  }
+}
+
 mutation RemoveTicketStatus($ticketStatusId: ID!) {
   ticketStatus(id: $ticketStatusId) {
     remove

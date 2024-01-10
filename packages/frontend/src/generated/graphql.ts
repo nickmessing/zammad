@@ -67,6 +67,7 @@ export type Mutation = {
   ticket: TicketMutation
   ticketStatus: TicketStatusMutation
   updateDisplayName: AuthenticationResponse
+  updateStatusesOrder: Array<TicketStatus>
 }
 
 export type MutationAuthenticateArgs = {
@@ -91,6 +92,10 @@ export type MutationTicketStatusArgs = {
 
 export type MutationUpdateDisplayNameArgs = {
   displayName: Scalars['String']['input']
+}
+
+export type MutationUpdateStatusesOrderArgs = {
+  ids: Array<Scalars['ID']['input']>
 }
 
 export type Query = {
@@ -472,6 +477,15 @@ export type UpdateTicketStatusMutation = {
       colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
     }
   }
+}
+
+export type UpdateStatusesOrderMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input']
+}>
+
+export type UpdateStatusesOrderMutation = {
+  __typename?: 'Mutation'
+  updateStatusesOrder: Array<{ __typename?: 'TicketStatus'; id: string; order: number; updatedAt: string }>
 }
 
 export type RemoveTicketStatusMutationVariables = Exact<{
@@ -1053,6 +1067,49 @@ export function useUpdateTicketStatusMutation(
 export type UpdateTicketStatusMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
   UpdateTicketStatusMutation,
   UpdateTicketStatusMutationVariables
+>
+export const UpdateStatusesOrderDocument = gql`
+  mutation UpdateStatusesOrder($ids: [ID!]!) {
+    updateStatusesOrder(ids: $ids) {
+      id
+      order
+      updatedAt
+    }
+  }
+`
+
+/**
+ * __useUpdateStatusesOrderMutation__
+ *
+ * To run a mutation, you first call `useUpdateStatusesOrderMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateStatusesOrderMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateStatusesOrderMutation({
+ *   variables: {
+ *     ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useUpdateStatusesOrderMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<UpdateStatusesOrderMutation, UpdateStatusesOrderMutationVariables>
+    | ReactiveFunction<
+        VueApolloComposable.UseMutationOptions<UpdateStatusesOrderMutation, UpdateStatusesOrderMutationVariables>
+      > = {},
+) {
+  return VueApolloComposable.useMutation<UpdateStatusesOrderMutation, UpdateStatusesOrderMutationVariables>(
+    UpdateStatusesOrderDocument,
+    options,
+  )
+}
+export type UpdateStatusesOrderMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
+  UpdateStatusesOrderMutation,
+  UpdateStatusesOrderMutationVariables
 >
 export const RemoveTicketStatusDocument = gql`
   mutation RemoveTicketStatus($ticketStatusId: ID!) {

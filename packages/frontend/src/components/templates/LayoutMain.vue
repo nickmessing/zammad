@@ -8,7 +8,7 @@ defineSlots<{
 
 <template>
   <slot name="header" />
-  <main class="relative flex grow overflow-hidden">
+  <main class="flex grow overflow-hidden">
     <div class="flex grow overflow-auto">
       <slot />
     </div>
