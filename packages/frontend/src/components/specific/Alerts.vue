@@ -20,7 +20,7 @@ const alertsStore = useAlertsStore()
         'bg-red-300': alert.type === AlertType.Error,
         'bg-blue-300': alert.type === AlertType.Information,
       }"
-      class="w-96 rounded-md bg-green-300 p-4"
+      class="flex w-96 flex-col gap-2 rounded-md bg-green-300 p-4"
       @close="alertsStore.removeAlert(alert.id)"
     >
       <template v-if="typeof alert.message === 'string'">

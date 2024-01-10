@@ -9,7 +9,7 @@ export const errorLink = onError(({ graphQLErrors, networkError }) => {
     for (const { message } of graphQLErrors) {
       alertsStore.message({
         type: AlertType.Error,
-        message,
+        message: message.split('\n'),
       })
     }
   }
