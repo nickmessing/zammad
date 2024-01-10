@@ -37,4 +37,5 @@ type Query {
 type Mutation {
   createTicketStatus(input: CreateTicketStatusInput!): TicketStatus!
   ticketStatus(id: ID!): TicketStatusMutation!
+  updateStatusesOrder(ids: [ID!]!): [TicketStatus!]!
 }

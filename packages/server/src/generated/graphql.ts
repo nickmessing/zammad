@@ -71,6 +71,7 @@ export type Mutation = {
   ticket: TicketMutation
   ticketStatus: TicketStatusMutation
   updateDisplayName: AuthenticationResponse
+  updateStatusesOrder: Array<TicketStatus>
 }
 
 export type MutationAuthenticateArgs = {
@@ -95,6 +96,10 @@ export type MutationTicketStatusArgs = {
 
 export type MutationUpdateDisplayNameArgs = {
   displayName: Scalars['String']['input']
+}
+
+export type MutationUpdateStatusesOrderArgs = {
+  ids: Array<Scalars['ID']['input']>
 }
 
 export type Query = {
@@ -445,6 +450,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationUpdateDisplayNameArgs, 'displayName'>
+  >
+  updateStatusesOrder?: Resolver<
+    Array<ResolversTypes['TicketStatus']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateStatusesOrderArgs, 'ids'>
   >
 }
 
