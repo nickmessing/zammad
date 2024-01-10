@@ -158,7 +158,7 @@ export type TicketCommentConnection = {
 
 export type TicketCommentMutation = {
   __typename?: 'TicketCommentMutation'
-  remove: Scalars['Boolean']['output']
+  remove: Scalars['String']['output']
   update: TicketComment
 }
 
@@ -177,7 +177,7 @@ export type TicketMutation = {
   __typename?: 'TicketMutation'
   comment: TicketCommentMutation
   createComment: TicketComment
-  remove: Scalars['Boolean']['output']
+  remove: Scalars['String']['output']
   update: Ticket
 }
 
@@ -212,7 +212,7 @@ export type TicketStatusTicketsArgs = {
 
 export type TicketStatusMutation = {
   __typename?: 'TicketStatusMutation'
-  remove: Scalars['Boolean']['output']
+  remove: Scalars['String']['output']
   update: TicketStatus
 }
 
@@ -472,6 +472,15 @@ export type UpdateTicketStatusMutation = {
       colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
     }
   }
+}
+
+export type RemoveTicketStatusMutationVariables = Exact<{
+  ticketStatusId: Scalars['ID']['input']
+}>
+
+export type RemoveTicketStatusMutation = {
+  __typename?: 'Mutation'
+  ticketStatus: { __typename?: 'TicketStatusMutation'; remove: string }
 }
 
 export type TicketStatusDetailsForListFragment = {
@@ -1044,6 +1053,47 @@ export function useUpdateTicketStatusMutation(
 export type UpdateTicketStatusMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
   UpdateTicketStatusMutation,
   UpdateTicketStatusMutationVariables
+>
+export const RemoveTicketStatusDocument = gql`
+  mutation RemoveTicketStatus($ticketStatusId: ID!) {
+    ticketStatus(id: $ticketStatusId) {
+      remove
+    }
+  }
+`
+
+/**
+ * __useRemoveTicketStatusMutation__
+ *
+ * To run a mutation, you first call `useRemoveTicketStatusMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveTicketStatusMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useRemoveTicketStatusMutation({
+ *   variables: {
+ *     ticketStatusId: // value for 'ticketStatusId'
+ *   },
+ * });
+ */
+export function useRemoveTicketStatusMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<RemoveTicketStatusMutation, RemoveTicketStatusMutationVariables>
+    | ReactiveFunction<
+        VueApolloComposable.UseMutationOptions<RemoveTicketStatusMutation, RemoveTicketStatusMutationVariables>
+      > = {},
+) {
+  return VueApolloComposable.useMutation<RemoveTicketStatusMutation, RemoveTicketStatusMutationVariables>(
+    RemoveTicketStatusDocument,
+    options,
+  )
+}
+export type RemoveTicketStatusMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
+  RemoveTicketStatusMutation,
+  RemoveTicketStatusMutationVariables
 >
 export const TicketStatusesDocument = gql`
   query TicketStatuses {

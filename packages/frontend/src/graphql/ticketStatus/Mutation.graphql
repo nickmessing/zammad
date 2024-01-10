@@ -18,3 +18,9 @@ mutation UpdateTicketStatus($ticketStatusId: ID!, $input: UpdateTicketStatusInpu
     }
   }
 }
+
+mutation RemoveTicketStatus($ticketStatusId: ID!) {
+  ticketStatus(id: $ticketStatusId) {
+    remove
+  }
+}

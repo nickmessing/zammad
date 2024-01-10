@@ -9,5 +9,5 @@ export const remove = (async (parent, _, { database, schema, tokenInfo }) => {
 
   await database.delete(schema.ticketStatuses).where(eq(schema.ticketStatuses.id, parent.id))
 
-  return true
+  return parent.id
 }) satisfies TicketStatusMutationResolvers['remove']

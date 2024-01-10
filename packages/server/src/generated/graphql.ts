@@ -162,7 +162,7 @@ export type TicketCommentConnection = {
 
 export type TicketCommentMutation = {
   __typename?: 'TicketCommentMutation'
-  remove: Scalars['Boolean']['output']
+  remove: Scalars['String']['output']
   update: TicketComment
 }
 
@@ -181,7 +181,7 @@ export type TicketMutation = {
   __typename?: 'TicketMutation'
   comment: TicketCommentMutation
   createComment: TicketComment
-  remove: Scalars['Boolean']['output']
+  remove: Scalars['String']['output']
   update: Ticket
 }
 
@@ -216,7 +216,7 @@ export type TicketStatusTicketsArgs = {
 
 export type TicketStatusMutation = {
   __typename?: 'TicketStatusMutation'
-  remove: Scalars['Boolean']['output']
+  remove: Scalars['String']['output']
   update: TicketStatus
 }
 
@@ -519,7 +519,7 @@ export type TicketCommentMutationResolvers<
   ContextType = ApolloContext,
   ParentType extends ResolversParentTypes['TicketCommentMutation'] = ResolversParentTypes['TicketCommentMutation'],
 > = {
-  remove?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  remove?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   update?: Resolver<
     ResolversTypes['TicketComment'],
     ParentType,
@@ -555,7 +555,7 @@ export type TicketMutationResolvers<
     ContextType,
     RequireFields<TicketMutationCreateCommentArgs, 'input'>
   >
-  remove?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  remove?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   update?: Resolver<ResolversTypes['Ticket'], ParentType, ContextType, RequireFields<TicketMutationUpdateArgs, 'input'>>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
@@ -584,7 +584,7 @@ export type TicketStatusMutationResolvers<
   ContextType = ApolloContext,
   ParentType extends ResolversParentTypes['TicketStatusMutation'] = ResolversParentTypes['TicketStatusMutation'],
 > = {
-  remove?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  remove?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   update?: Resolver<
     ResolversTypes['TicketStatus'],
     ParentType,

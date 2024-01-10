@@ -16,6 +16,7 @@ import {
 } from '@/generated/graphql'
 import { useUserStore } from '@/stores/user'
 
+import StatusRemoval from './StatusRemoval.vue'
 import StatusTicketList from './StatusTicketList.vue'
 
 const props = defineProps<{
@@ -120,12 +121,15 @@ onDone(() => {
           </ZammadButton>
         </div>
       </div>
-      <StatusIndicator
-        v-else
-        :status="ticketStatusQueryResult.ticketStatus"
-        isClickable
-        @click="() => toggleIsEditingTicketStatus(true)"
-      />
+      <div v-else class="flex flex-row items-center gap-2">
+        <StatusIndicator
+          :status="ticketStatusQueryResult.ticketStatus"
+          class="grow"
+          isClickable
+          @click="() => toggleIsEditingTicketStatus(true)"
+        />
+        <StatusRemoval :status="ticketStatusQueryResult.ticketStatus" />
+      </div>
     </ZammadHeading>
     <StatusTicketList :ticketStatusId="props.ticketStatusId" />
   </ZammadColumn>

@@ -32,7 +32,7 @@ input UpdateTicketInput {
 
 type TicketMutation {
   update(input: UpdateTicketInput!): Ticket!
-  remove: Boolean!
+  remove: String!
 }
 
 type Query {

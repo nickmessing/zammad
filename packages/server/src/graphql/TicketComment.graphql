@@ -20,7 +20,7 @@ input CreateTicketCommentInput {
 
 type TicketCommentMutation {
   update(comment: String!): TicketComment!
-  remove: Boolean!
+  remove: String!
 }
 
 type TicketMutation {
