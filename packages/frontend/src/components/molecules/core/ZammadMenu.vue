@@ -23,7 +23,9 @@ const emit = defineEmits<{
     <ZammadButton :to="{ name: 'Home' }" theme="nav" isActiveClassOnExactMatch> Home </ZammadButton>
     <ZammadButton :to="{ name: 'Tickets' }" theme="nav"> Tickets </ZammadButton>
     <template v-if="props.isUserAuthenticated">
-      <ZammadButton :to="{ name: 'User', params: { id: props.currentUserId } }" theme="nav"> Profile </ZammadButton>
+      <ZammadButton v-if="props.currentUserId" :to="{ name: 'User', params: { id: props.currentUserId } }" theme="nav">
+        Profile
+      </ZammadButton>
       <ZammadButton theme="nav" @click="() => emit('logout')"> Logout </ZammadButton>
     </template>
     <ZammadButton v-else-if="props.isUserNotAuthenticated" :to="{ name: 'Authenticate' }" theme="nav">

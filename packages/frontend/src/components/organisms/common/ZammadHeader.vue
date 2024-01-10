@@ -24,7 +24,7 @@ async function logout() {
       <ZammadMenu
         :isUserAuthenticated="userStore.isAuthenticated"
         :isUserNotAuthenticated="userStore.isNotAuthenticated"
-        :userId="userStore.userId"
+        :currentUserId="userStore.userId"
         @logout="logout"
       />
     </div>
