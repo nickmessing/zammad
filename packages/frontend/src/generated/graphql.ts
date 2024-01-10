@@ -275,6 +275,25 @@ export type UpdateTicketMutation = {
   }
 }
 
+export type GenericTicketFragment = {
+  __typename?: 'Ticket'
+  id: string
+  title: string
+  description: string
+  createdAt: string
+  updatedAt: string
+  assignee?: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string } | null
+  author: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string }
+  status: {
+    __typename?: 'TicketStatus'
+    id: string
+    name: string
+    createdAt: string
+    updatedAt: string
+    colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
+  }
+}
+
 export type TicketQueryVariables = Exact<{
   ticketId: Scalars['ID']['input']
 }>
@@ -288,9 +307,16 @@ export type TicketQuery = {
     description: string
     createdAt: string
     updatedAt: string
-    assignee?: { __typename?: 'User'; id: string; createdAt: string; updatedAt: string } | null
-    author: { __typename?: 'User'; id: string; createdAt: string; updatedAt: string }
-    status: { __typename?: 'TicketStatus'; id: string; createdAt: string; updatedAt: string }
+    assignee?: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string } | null
+    author: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string }
+    status: {
+      __typename?: 'TicketStatus'
+      id: string
+      name: string
+      createdAt: string
+      updatedAt: string
+      colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
+    }
   } | null
 }
 
@@ -311,7 +337,24 @@ export type UserCreatedTicketsQuery = {
       __typename?: 'TicketConnection'
       totalCount: number
       endCursor?: string | null
-      items: Array<{ __typename?: 'Ticket'; id: string; createdAt: string; updatedAt: string }>
+      items: Array<{
+        __typename?: 'Ticket'
+        id: string
+        title: string
+        description: string
+        createdAt: string
+        updatedAt: string
+        assignee?: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string } | null
+        author: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string }
+        status: {
+          __typename?: 'TicketStatus'
+          id: string
+          name: string
+          createdAt: string
+          updatedAt: string
+          colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
+        }
+      }>
     }
   } | null
 }
@@ -333,7 +376,24 @@ export type TicketStatusTicketsQuery = {
       __typename?: 'TicketConnection'
       totalCount: number
       endCursor?: string | null
-      items: Array<{ __typename?: 'Ticket'; id: string; createdAt: string; updatedAt: string }>
+      items: Array<{
+        __typename?: 'Ticket'
+        id: string
+        title: string
+        description: string
+        createdAt: string
+        updatedAt: string
+        assignee?: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string } | null
+        author: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string }
+        status: {
+          __typename?: 'TicketStatus'
+          id: string
+          name: string
+          createdAt: string
+          updatedAt: string
+          colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
+        }
+      }>
     }
   } | null
 }
@@ -355,7 +415,24 @@ export type UserAssignedTicketsQuery = {
       __typename?: 'TicketConnection'
       totalCount: number
       endCursor?: string | null
-      items: Array<{ __typename?: 'Ticket'; id: string; createdAt: string; updatedAt: string }>
+      items: Array<{
+        __typename?: 'Ticket'
+        id: string
+        title: string
+        description: string
+        createdAt: string
+        updatedAt: string
+        assignee?: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string } | null
+        author: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string }
+        status: {
+          __typename?: 'TicketStatus'
+          id: string
+          name: string
+          createdAt: string
+          updatedAt: string
+          colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
+        }
+      }>
     }
   } | null
 }
@@ -387,17 +464,19 @@ export type TicketStatusesQuery = {
   ticketStatuses: Array<{
     __typename?: 'TicketStatus'
     id: string
+    name: string
     order: number
     createdAt: string
     updatedAt: string
+    colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
   }>
 }
 
-export type TicketStatusBaseQueryVariables = Exact<{
+export type TicketStatusQueryVariables = Exact<{
   ticketStatusId: Scalars['ID']['input']
 }>
 
-export type TicketStatusBaseQuery = {
+export type TicketStatusQuery = {
   __typename?: 'Query'
   ticketStatus?: {
     __typename?: 'TicketStatus'
@@ -464,6 +543,37 @@ export type UserQuery = {
   } | null
 }
 
+export const GenericTicketFragmentDoc = gql`
+  fragment GenericTicket on Ticket {
+    id
+    title
+    description
+    assignee {
+      id
+      displayName
+      createdAt
+      updatedAt
+    }
+    author {
+      id
+      displayName
+      createdAt
+      updatedAt
+    }
+    createdAt
+    updatedAt
+    status {
+      id
+      name
+      colorBase {
+        hue
+        saturation
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const UpdateTicketDocument = gql`
   mutation UpdateTicket($ticketId: ID!, $input: UpdateTicketInput!) {
     ticket(id: $ticketId) {
@@ -519,28 +629,10 @@ export type UpdateTicketMutationCompositionFunctionResult = VueApolloComposable.
 export const TicketDocument = gql`
   query Ticket($ticketId: ID!) {
     ticket(id: $ticketId) {
-      id
-      title
-      description
-      assignee {
-        id
-        createdAt
-        updatedAt
-      }
-      author {
-        id
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-      status {
-        id
-        createdAt
-        updatedAt
-      }
+      ...GenericTicket
     }
   }
+  ${GenericTicketFragmentDoc}
 `
 
 /**
@@ -593,13 +685,12 @@ export const UserCreatedTicketsDocument = gql`
         totalCount
         endCursor
         items {
-          id
-          createdAt
-          updatedAt
+          ...GenericTicket
         }
       }
     }
   }
+  ${GenericTicketFragmentDoc}
 `
 
 /**
@@ -673,13 +764,12 @@ export const TicketStatusTicketsDocument = gql`
         totalCount
         endCursor
         items {
-          id
-          createdAt
-          updatedAt
+          ...GenericTicket
         }
       }
     }
   }
+  ${GenericTicketFragmentDoc}
 `
 
 /**
@@ -753,13 +843,12 @@ export const UserAssignedTicketsDocument = gql`
         totalCount
         endCursor
         items {
-          id
-          createdAt
-          updatedAt
+          ...GenericTicket
         }
       }
     }
   }
+  ${GenericTicketFragmentDoc}
 `
 
 /**
@@ -878,7 +967,12 @@ export const TicketStatusesDocument = gql`
   query TicketStatuses {
     ticketStatuses {
       id
+      name
       order
+      colorBase {
+        hue
+        saturation
+      }
       createdAt
       updatedAt
     }
@@ -925,71 +1019,71 @@ export type TicketStatusesQueryCompositionFunctionResult = VueApolloComposable.U
   TicketStatusesQuery,
   TicketStatusesQueryVariables
 >
-export const TicketStatusBaseDocument = gql`
-  query TicketStatusBase($ticketStatusId: ID!) {
+export const TicketStatusDocument = gql`
+  query TicketStatus($ticketStatusId: ID!) {
     ticketStatus(id: $ticketStatusId) {
       id
       name
-      createdAt
-      updatedAt
       colorBase {
         hue
         saturation
       }
+      createdAt
+      updatedAt
     }
   }
 `
 
 /**
- * __useTicketStatusBaseQuery__
+ * __useTicketStatusQuery__
  *
- * To run a query within a Vue component, call `useTicketStatusBaseQuery` and pass it any options that fit your needs.
- * When your component renders, `useTicketStatusBaseQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * To run a query within a Vue component, call `useTicketStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTicketStatusQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
  * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useTicketStatusBaseQuery({
+ * const { result, loading, error } = useTicketStatusQuery({
  *   ticketStatusId: // value for 'ticketStatusId'
  * });
  */
-export function useTicketStatusBaseQuery(
+export function useTicketStatusQuery(
   variables:
-    | TicketStatusBaseQueryVariables
-    | VueCompositionApi.Ref<TicketStatusBaseQueryVariables>
-    | ReactiveFunction<TicketStatusBaseQueryVariables>,
+    | TicketStatusQueryVariables
+    | VueCompositionApi.Ref<TicketStatusQueryVariables>
+    | ReactiveFunction<TicketStatusQueryVariables>,
   options:
-    | VueApolloComposable.UseQueryOptions<TicketStatusBaseQuery, TicketStatusBaseQueryVariables>
-    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<TicketStatusBaseQuery, TicketStatusBaseQueryVariables>>
-    | ReactiveFunction<VueApolloComposable.UseQueryOptions<TicketStatusBaseQuery, TicketStatusBaseQueryVariables>> = {},
+    | VueApolloComposable.UseQueryOptions<TicketStatusQuery, TicketStatusQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<TicketStatusQuery, TicketStatusQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<TicketStatusQuery, TicketStatusQueryVariables>> = {},
 ) {
-  return VueApolloComposable.useQuery<TicketStatusBaseQuery, TicketStatusBaseQueryVariables>(
-    TicketStatusBaseDocument,
+  return VueApolloComposable.useQuery<TicketStatusQuery, TicketStatusQueryVariables>(
+    TicketStatusDocument,
     variables,
     options,
   )
 }
-export function useTicketStatusBaseLazyQuery(
+export function useTicketStatusLazyQuery(
   variables:
-    | TicketStatusBaseQueryVariables
-    | VueCompositionApi.Ref<TicketStatusBaseQueryVariables>
-    | ReactiveFunction<TicketStatusBaseQueryVariables>,
+    | TicketStatusQueryVariables
+    | VueCompositionApi.Ref<TicketStatusQueryVariables>
+    | ReactiveFunction<TicketStatusQueryVariables>,
   options:
-    | VueApolloComposable.UseQueryOptions<TicketStatusBaseQuery, TicketStatusBaseQueryVariables>
-    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<TicketStatusBaseQuery, TicketStatusBaseQueryVariables>>
-    | ReactiveFunction<VueApolloComposable.UseQueryOptions<TicketStatusBaseQuery, TicketStatusBaseQueryVariables>> = {},
+    | VueApolloComposable.UseQueryOptions<TicketStatusQuery, TicketStatusQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<TicketStatusQuery, TicketStatusQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<TicketStatusQuery, TicketStatusQueryVariables>> = {},
 ) {
-  return VueApolloComposable.useLazyQuery<TicketStatusBaseQuery, TicketStatusBaseQueryVariables>(
-    TicketStatusBaseDocument,
+  return VueApolloComposable.useLazyQuery<TicketStatusQuery, TicketStatusQueryVariables>(
+    TicketStatusDocument,
     variables,
     options,
   )
 }
-export type TicketStatusBaseQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
-  TicketStatusBaseQuery,
-  TicketStatusBaseQueryVariables
+export type TicketStatusQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+  TicketStatusQuery,
+  TicketStatusQueryVariables
 >
 export const AuthenticateDocument = gql`
   mutation Authenticate($username: String!) {

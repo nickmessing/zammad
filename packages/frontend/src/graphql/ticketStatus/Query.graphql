@@ -1,21 +1,26 @@
 query TicketStatuses {
   ticketStatuses {
     id
+    name
     order
+    colorBase {
+      hue
+      saturation
+    }
     createdAt
     updatedAt
   }
 }
 
-query TicketStatusBase($ticketStatusId: ID!) {
+query TicketStatus($ticketStatusId: ID!) {
   ticketStatus(id: $ticketStatusId) {
     id
     name
-    createdAt
-    updatedAt
     colorBase {
       hue
       saturation
     }
+    createdAt
+    updatedAt
   }
 }

@@ -1,25 +1,36 @@
-query Ticket($ticketId: ID!) {
-  ticket(id: $ticketId) {
+fragment GenericTicket on Ticket {
+  id
+  title
+  description
+  assignee {
     id
-    title
-    description
-    assignee {
-      id
-      createdAt
-      updatedAt
-    }
-    author {
-      id
-      createdAt
-      updatedAt
+    displayName
+    createdAt
+    updatedAt
+  }
+  author {
+    id
+    displayName
+    createdAt
+    updatedAt
+  }
+  createdAt
+  updatedAt
+  status {
+    id
+    name
+    colorBase {
+      hue
+      saturation
     }
     createdAt
     updatedAt
-    status {
-      id
-      createdAt
-      updatedAt
-    }
+  }
+}
+
+query Ticket($ticketId: ID!) {
+  ticket(id: $ticketId) {
+    ...GenericTicket
   }
 }
 
@@ -32,9 +43,7 @@ query UserCreatedTickets($userId: ID!, $first: Int!, $after: String) {
       totalCount
       endCursor
       items {
-        id
-        createdAt
-        updatedAt
+        ...GenericTicket
       }
     }
   }
@@ -49,14 +58,11 @@ query TicketStatusTickets($ticketStatusId: ID!, $first: Int!, $after: String) {
       totalCount
       endCursor
       items {
-        id
-        createdAt
-        updatedAt
+        ...GenericTicket
       }
     }
   }
 }
-
 
 query UserAssignedTickets($userId: ID!, $first: Int!, $after: String) {
   user(id: $userId) {
@@ -67,9 +73,7 @@ query UserAssignedTickets($userId: ID!, $first: Int!, $after: String) {
       totalCount
       endCursor
       items {
-        id
-        createdAt
-        updatedAt
+        ...GenericTicket
       }
     }
   }

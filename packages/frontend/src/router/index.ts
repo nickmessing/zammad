@@ -1,22 +1,12 @@
-import { defineComponent, h } from 'vue'
-import { RouterView, createRouter, createWebHistory, useRoute } from 'vue-router'
+import { RouterView, createRouter, createWebHistory } from 'vue-router'
 
-import LayoutMain from '@/components/layout/LayoutMain.vue'
-import Authenticate from '@/views/Authenticate.vue'
-import Error from '@/views/Error.vue'
-import Home from '@/views/Home.vue'
-import Tickets from '@/views/tickets/Index.vue'
-import Ticket from '@/views/tickets/Ticket.vue'
-import User from '@/views/User.vue'
-
-const JustRouter = defineComponent({
-  name: 'JustRouter',
-  setup() {
-    const route = useRoute()
-    console.log('setup running', route)
-  },
-  render: () => h(RouterView),
-})
+import ErrorPage from '@/components/pages/ErrorPage.vue'
+import AuthenticationPage from '@/components/pages/main/AuthenticationPage.vue'
+import HomePage from '@/components/pages/main/HomePage.vue'
+import TicketPage from '@/components/pages/main/tickets/TicketPage.vue'
+import TicketsPage from '@/components/pages/main/tickets/TicketsPage.vue'
+import UserPage from '@/components/pages/main/UserPage.vue'
+import MainPage from '@/components/pages/MainPage.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -25,41 +15,40 @@ export const router = createRouter({
       path: '/error',
       alias: '/:pathMatch(.*)*',
       name: 'Error',
-      component: Error,
+      component: ErrorPage,
     },
     {
       path: '/',
-      component: LayoutMain,
+      component: MainPage,
       children: [
         {
           path: '',
           name: 'Home',
-          component: Home,
+          component: HomePage,
         },
         {
           path: 'authenticate',
           name: 'Authenticate',
-          component: Authenticate,
+          component: AuthenticationPage,
         },
         {
           path: 'users/:id',
           name: 'User',
-          component: User,
+          component: UserPage,
         },
         {
           path: 'tickets',
-          name: 'TicketsGroup',
           component: RouterView,
           children: [
             {
               path: '',
               name: 'Tickets',
-              component: Tickets,
+              component: TicketsPage,
             },
             {
               path: ':id',
               name: 'Ticket',
-              component: Ticket,
+              component: TicketPage,
             },
           ],
         },
