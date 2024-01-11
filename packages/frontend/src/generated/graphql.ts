@@ -289,6 +289,32 @@ export type TicketCommentsQuery = {
   } | null
 }
 
+export type CreateTicketMutationVariables = Exact<{
+  input: CreateTicketInput
+}>
+
+export type CreateTicketMutation = {
+  __typename?: 'Mutation'
+  createTicket: {
+    __typename?: 'Ticket'
+    id: string
+    title: string
+    description: string
+    createdAt: string
+    updatedAt: string
+    assignee?: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string } | null
+    author: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string }
+    status: {
+      __typename?: 'TicketStatus'
+      id: string
+      name: string
+      createdAt: string
+      updatedAt: string
+      colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
+    }
+  }
+}
+
 export type UpdateTicketMutationVariables = Exact<{
   ticketId: Scalars['ID']['input']
   input: UpdateTicketInput
@@ -302,9 +328,19 @@ export type UpdateTicketMutation = {
       __typename?: 'Ticket'
       id: string
       title: string
+      description: string
       createdAt: string
       updatedAt: string
-      status: { __typename?: 'TicketStatus'; id: string; createdAt: string; updatedAt: string }
+      assignee?: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string } | null
+      author: { __typename?: 'User'; id: string; displayName: string; createdAt: string; updatedAt: string }
+      status: {
+        __typename?: 'TicketStatus'
+        id: string
+        name: string
+        createdAt: string
+        updatedAt: string
+        colorBase: { __typename?: 'ColorBase'; hue: number; saturation: number }
+      }
     }
   }
 }
@@ -745,22 +781,57 @@ export type TicketCommentsQueryCompositionFunctionResult = VueApolloComposable.U
   TicketCommentsQuery,
   TicketCommentsQueryVariables
 >
+export const CreateTicketDocument = gql`
+  mutation CreateTicket($input: CreateTicketInput!) {
+    createTicket(input: $input) {
+      ...GenericTicket
+    }
+  }
+  ${GenericTicketFragmentDoc}
+`
+
+/**
+ * __useCreateTicketMutation__
+ *
+ * To run a mutation, you first call `useCreateTicketMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTicketMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useCreateTicketMutation({
+ *   variables: {
+ *     input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateTicketMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<CreateTicketMutation, CreateTicketMutationVariables>
+    | ReactiveFunction<
+        VueApolloComposable.UseMutationOptions<CreateTicketMutation, CreateTicketMutationVariables>
+      > = {},
+) {
+  return VueApolloComposable.useMutation<CreateTicketMutation, CreateTicketMutationVariables>(
+    CreateTicketDocument,
+    options,
+  )
+}
+export type CreateTicketMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<
+  CreateTicketMutation,
+  CreateTicketMutationVariables
+>
 export const UpdateTicketDocument = gql`
   mutation UpdateTicket($ticketId: ID!, $input: UpdateTicketInput!) {
     ticket(id: $ticketId) {
       update(input: $input) {
-        id
-        title
-        createdAt
-        updatedAt
-        status {
-          id
-          createdAt
-          updatedAt
-        }
+        ...GenericTicket
       }
     }
   }
+  ${GenericTicketFragmentDoc}
 `
 
 /**

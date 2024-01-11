@@ -1,6 +1,12 @@
-import { InMemoryCache } from '@apollo/client/core'
+import { InMemoryCache, type Reference } from '@apollo/client/core'
 
-import type { TicketConnection } from '@/generated/graphql'
+import { type TicketConnection } from '@/generated/graphql'
+
+const haveIdenticalIds = (a: Reference, b: Reference) => a.__ref === b.__ref
+
+type TicketConnectionWithReferences = Omit<TicketConnection, 'items'> & {
+  items: Reference[]
+}
 
 export const cache = new InMemoryCache({
   typePolicies: {
@@ -8,7 +14,7 @@ export const cache = new InMemoryCache({
       fields: {
         assignedTickets: {
           keyArgs: false,
-          merge(existing: TicketConnection | undefined, incoming: TicketConnection) {
+          merge(existing: TicketConnectionWithReferences | undefined, incoming: TicketConnectionWithReferences) {
             return {
               ...existing,
               ...incoming,
@@ -18,7 +24,7 @@ export const cache = new InMemoryCache({
         },
         createdTickets: {
           keyArgs: false,
-          merge(existing: TicketConnection | undefined, incoming: TicketConnection) {
+          merge(existing: TicketConnectionWithReferences | undefined, incoming: TicketConnectionWithReferences) {
             return {
               ...existing,
               ...incoming,
@@ -32,11 +38,16 @@ export const cache = new InMemoryCache({
       fields: {
         tickets: {
           keyArgs: false,
-          merge(existing: TicketConnection | undefined, incoming: TicketConnection) {
+          merge(existing: TicketConnectionWithReferences | undefined, incoming: TicketConnectionWithReferences) {
             return {
               ...existing,
               ...incoming,
-              items: [...(existing?.items ?? []), ...incoming.items],
+              items: [
+                ...(existing?.items ?? []).filter(
+                  item => !incoming.items.some(incomingItem => haveIdenticalIds(item, incomingItem)),
+                ),
+                ...incoming.items,
+              ],
             }
           },
         },

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import SingleComment from '@/components/molecules/comment/SingleComment.vue'
 import { useTicketCommentsQuery } from '@/generated/graphql'
+import { COMMENTS_PER_PAGE } from '@/utils/constants'
 
 const props = defineProps<{
   ticketId: string
 }>()
-
-const COMMENTS_PER_PAGE = 10
 
 const { result: ticketCommentsQueryResult } = useTicketCommentsQuery(() => ({
   ticketId: props.ticketId,

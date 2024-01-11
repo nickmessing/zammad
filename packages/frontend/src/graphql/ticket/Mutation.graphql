@@ -1,15 +1,13 @@
+mutation CreateTicket($input: CreateTicketInput!) {
+  createTicket(input: $input) {
+      ...GenericTicket
+  }
+}
+
 mutation UpdateTicket($ticketId: ID!, $input: UpdateTicketInput!) {
   ticket(id: $ticketId) {
     update(input: $input) {
-      id
-      title
-      createdAt
-      updatedAt
-      status {
-        id
-        createdAt
-        updatedAt
-      }
+      ...GenericTicket
     }
   }
 }

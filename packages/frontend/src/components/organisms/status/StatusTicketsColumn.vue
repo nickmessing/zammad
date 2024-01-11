@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
+import ZammadButton from '@/components/atoms/common/ZammadButton.vue'
 import ZammadColumn from '@/components/atoms/common/ZammadColumn.vue'
+import { useCreateTicket } from '@/components/organisms/composition/apollo/ticket/useCreateTicket'
+import { useUserStore } from '@/stores/user'
 
 import StatusTicketList from './StatusTicketList.vue'
 import StatusTicketsColumnHeading from './StatusTicketsColumnHeading.vue'
@@ -20,9 +23,10 @@ const emit = defineEmits<{
   updateActiveStatus: [ticketStatusId: string]
 }>()
 
+const userStore = useUserStore()
+
 const columnContainerReference = ref<HTMLDivElement>()
 const offset = ref<Coordinates>()
-
 function handleDragStart({ coordinates, event }: { coordinates: Coordinates; event: MouseEvent }) {
   if (columnContainerReference.value == undefined) {
     return
@@ -36,7 +40,6 @@ function handleDragStart({ coordinates, event }: { coordinates: Coordinates; eve
 
   emit('dragStart', event)
 }
-
 const top = computed(() => {
   if (props.mouseCoordinates == undefined || offset.value == undefined) {
     return
@@ -44,7 +47,6 @@ const top = computed(() => {
 
   return props.mouseCoordinates.y - offset.value.y
 })
-
 const left = computed(() => {
   if (props.mouseCoordinates == undefined || offset.value == undefined) {
     return
@@ -52,6 +54,8 @@ const left = computed(() => {
 
   return props.mouseCoordinates.x - offset.value.x
 })
+
+const { createTicket } = useCreateTicket()
 </script>
 
 <template>
@@ -74,6 +78,9 @@ const left = computed(() => {
         @dragStart="handleDragStart"
         @updateActiveStatus="value => emit('updateActiveStatus', value)"
       />
+      <ZammadButton v-if="userStore.isAuthenticated" @click="() => createTicket({ statusId: props.ticketStatusId })"
+        >New Ticket</ZammadButton
+      >
       <StatusTicketList :ticketStatusId="props.ticketStatusId" />
     </ZammadColumn>
   </div>
