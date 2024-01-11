@@ -1,0 +1,23 @@
+query TicketComments($ticketId: ID!, $first: Int!, $after: String) {
+  ticket(id: $ticketId) {
+    id
+    createdAt
+    updatedAt
+    comments(first: $first, after: $after) {
+      totalCount
+      endCursor
+      items {
+        id
+        comment
+        createdAt
+        updatedAt
+        author {
+          id
+          displayName
+          createdAt
+          username
+        }
+      }
+    }
+  }
+}

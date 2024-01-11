@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
+import TicketComments from '@/components/organisms/comment/TicketComments.vue'
 import TicketDetails from '@/components/organisms/ticket/TicketDetails.vue'
 import LeftSidebarLayout from '@/components/templates/LeftSidebarLayout.vue'
 
@@ -16,6 +17,6 @@ const id = computed(() => String(route.params.id))
       <TicketDetails :ticketId="id" />
     </template>
 
-    Main Content
+    <TicketComments :ticketId="id" />
   </LeftSidebarLayout>
 </template>

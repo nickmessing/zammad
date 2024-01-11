@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import { faker } from '@faker-js/faker'
 import { createId } from '@paralleldrive/cuid2'
 
@@ -38,7 +39,7 @@ function createRandomUser() {
   }
 
   const displayName = faker.person.fullName({ firstName, lastName })
-  const createdAt = faker.date.recent({ days: 20 })
+  const createdAt = faker.date.past({ years: 1 })
   const updatedAt = isUpdated()
     ? faker.date.between({
         from: createdAt,
@@ -62,7 +63,7 @@ function createRandomTicketStatus(name: string, order: number) {
     name in staticColors
       ? staticColors[name as keyof typeof staticColors].saturation
       : faker.number.int({ min: 10, max: 90 })
-  const createdAt = faker.date.recent({ days: 20 })
+  const createdAt = faker.date.past({ years: 1 })
   const updatedAt = isUpdated()
     ? faker.date.between({
         from: createdAt,
@@ -138,18 +139,26 @@ export async function seedDatabase(database: Database) {
   // Expect this to take forever
   for (const user of usersToInsert) {
     console.log('Inserting user', user)
-    await database.insert(users).values([user])
+    try {
+      await database.insert(users).values([user])
+    } catch {}
   }
   for (const ticketStatus of ticketStatusesToInsert) {
     console.log('Inserting ticket status', ticketStatus)
-    await database.insert(ticketStatuses).values([ticketStatus])
+    try {
+      await database.insert(ticketStatuses).values([ticketStatus])
+    } catch {}
   }
   for (const ticket of ticketsToInsert) {
     console.log('Inserting ticket', ticket)
-    await database.insert(tickets).values([ticket])
+    try {
+      await database.insert(tickets).values([ticket])
+    } catch {}
   }
   for (const ticketComment of ticketCommentsToInsert) {
     console.log('Inserting ticket comment', ticketComment)
-    await database.insert(ticketComments).values([ticketComment])
+    try {
+      await database.insert(ticketComments).values([ticketComment])
+    } catch {}
   }
 }

@@ -260,6 +260,35 @@ export type UserCreatedTicketsArgs = {
   first: Scalars['Int']['input']
 }
 
+export type TicketCommentsQueryVariables = Exact<{
+  ticketId: Scalars['ID']['input']
+  first: Scalars['Int']['input']
+  after?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type TicketCommentsQuery = {
+  __typename?: 'Query'
+  ticket?: {
+    __typename?: 'Ticket'
+    id: string
+    createdAt: string
+    updatedAt: string
+    comments: {
+      __typename?: 'TicketCommentConnection'
+      totalCount: number
+      endCursor?: string | null
+      items: Array<{
+        __typename?: 'TicketComment'
+        id: string
+        comment: string
+        createdAt: string
+        updatedAt: string
+        author: { __typename?: 'User'; id: string; displayName: string; createdAt: string; username: string }
+      }>
+    }
+  } | null
+}
+
 export type UpdateTicketMutationVariables = Exact<{
   ticketId: Scalars['ID']['input']
   input: UpdateTicketInput
@@ -637,6 +666,85 @@ export const TicketStatusDetailsForListFragmentDoc = gql`
     updatedAt
   }
 `
+export const TicketCommentsDocument = gql`
+  query TicketComments($ticketId: ID!, $first: Int!, $after: String) {
+    ticket(id: $ticketId) {
+      id
+      createdAt
+      updatedAt
+      comments(first: $first, after: $after) {
+        totalCount
+        endCursor
+        items {
+          id
+          comment
+          createdAt
+          updatedAt
+          author {
+            id
+            displayName
+            createdAt
+            username
+          }
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useTicketCommentsQuery__
+ *
+ * To run a query within a Vue component, call `useTicketCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTicketCommentsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useTicketCommentsQuery({
+ *   ticketId: // value for 'ticketId'
+ *   first: // value for 'first'
+ *   after: // value for 'after'
+ * });
+ */
+export function useTicketCommentsQuery(
+  variables:
+    | TicketCommentsQueryVariables
+    | VueCompositionApi.Ref<TicketCommentsQueryVariables>
+    | ReactiveFunction<TicketCommentsQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<TicketCommentsQuery, TicketCommentsQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<TicketCommentsQuery, TicketCommentsQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<TicketCommentsQuery, TicketCommentsQueryVariables>> = {},
+) {
+  return VueApolloComposable.useQuery<TicketCommentsQuery, TicketCommentsQueryVariables>(
+    TicketCommentsDocument,
+    variables,
+    options,
+  )
+}
+export function useTicketCommentsLazyQuery(
+  variables:
+    | TicketCommentsQueryVariables
+    | VueCompositionApi.Ref<TicketCommentsQueryVariables>
+    | ReactiveFunction<TicketCommentsQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<TicketCommentsQuery, TicketCommentsQueryVariables>
+    | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<TicketCommentsQuery, TicketCommentsQueryVariables>>
+    | ReactiveFunction<VueApolloComposable.UseQueryOptions<TicketCommentsQuery, TicketCommentsQueryVariables>> = {},
+) {
+  return VueApolloComposable.useLazyQuery<TicketCommentsQuery, TicketCommentsQueryVariables>(
+    TicketCommentsDocument,
+    variables,
+    options,
+  )
+}
+export type TicketCommentsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+  TicketCommentsQuery,
+  TicketCommentsQueryVariables
+>
 export const UpdateTicketDocument = gql`
   mutation UpdateTicket($ticketId: ID!, $input: UpdateTicketInput!) {
     ticket(id: $ticketId) {

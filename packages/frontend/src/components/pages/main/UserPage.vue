@@ -16,8 +16,9 @@ const id = computed(() => String(route.params.id))
     <template #sidebar>
       <UserProfile :userId="id" />
     </template>
-
-    <UserTickets :userId="id" ticketsType="created" />
-    <UserTickets :userId="id" ticketsType="assigned" />
+    <div class="flex grow flex-col gap-4 p-4 md:flex-row md:gap-8 md:p-8">
+      <UserTickets :userId="id" ticketsType="created" />
+      <UserTickets :userId="id" ticketsType="assigned" />
+    </div>
   </LeftSidebarLayout>
 </template>
