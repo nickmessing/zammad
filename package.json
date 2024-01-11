@@ -12,7 +12,10 @@
     "build:frontend": "cd packages/frontend && pnpm build-only",
     "build:server": "cd packages/server && pnpm build",
     "build": "run-s -l build:*",
-    "start:server": "cd packages/server && pnpm start"
+    "start:server": "cd packages/server && pnpm start",
+    "test:frontend": "cd packages/frontend && pnpm test:unit run",
+    "test:server": "cd packages/server && pnpm test run",
+    "test": "run-s -l test:*"
   },
   "devDependencies": {
     "npm-run-all2": "^6.1.1",
