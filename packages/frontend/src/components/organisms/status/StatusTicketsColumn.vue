@@ -70,7 +70,7 @@ const { createTicket } = useCreateTicket()
   >
     <ZammadColumn
       :class="{ 'dragging absolute z-10 transform opacity-80': props.isDragging }"
-      class="w-full overflow-hidden transition-opacity"
+      class="w-full overflow-hidden transition-opacity md:w-96"
     >
       <StatusTicketsColumnHeading
         :isDragging="props.isDragging"

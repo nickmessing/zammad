@@ -71,7 +71,11 @@ function handleDragIconMouseDown(event: MouseEvent) {
           @mousedown.stop.prevent="() => toggleIsEditingTicketStatus(true)"
         />
         <StatusRemoval :status="ticketStatusQueryResult.ticketStatus" />
-        <ZammadIcon :path="mdiDrag" class="hidden cursor-move" @mousedown.stop.prevent="handleDragIconMouseDown" />
+        <ZammadIcon
+          :path="mdiDrag"
+          class="hidden cursor-move md:block"
+          @mousedown.stop.prevent="handleDragIconMouseDown"
+        />
       </template>
     </div>
   </ZammadHeading>
