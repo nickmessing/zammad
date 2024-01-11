@@ -22,6 +22,9 @@ const props = withDefaults(
     isDisabled: false,
   },
 )
+const emit = defineEmits<{
+  click: [event: MouseEvent]
+}>()
 
 defineSlots<{
   default(): unknown
@@ -46,7 +49,7 @@ const classes = computed(() => {
     list.push('text-gray-300', 'hover:bg-gray-700', 'hover:text-white', 'active:bg-gray-900')
   }
   if (props.theme === 'primary') {
-    list.push('text-white', 'bg-indigo-600', 'hover:bg-indigo-700', 'active:bg-indigo-800')
+    list.push('text-white', 'bg-primary-600', 'hover:bg-primary-700', 'active:bg-primary-800')
   }
   if (props.theme === 'default') {
     list.push('text-gray-700', 'bg-gray-100', 'hover:bg-gray-200', 'active:bg-gray-300')
@@ -97,7 +100,7 @@ const htmlElementAttributes = computed(() => {
 </script>
 
 <template>
-  <Component :is="htmlElementName" v-bind="htmlElementAttributes">
+  <Component :is="htmlElementName" v-bind="htmlElementAttributes" @click="(event: MouseEvent) => emit('click', event)">
     <slot />
   </Component>
 </template>

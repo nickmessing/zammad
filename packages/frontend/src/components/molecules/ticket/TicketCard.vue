@@ -32,7 +32,7 @@ const props = defineProps<{
     <ZammadHeading :level="3">{{ props.ticket.title }}</ZammadHeading>
     <div class="flex flex-row items-center justify-between">
       <div class="flex flex-row items-center gap-2">
-        <UserIndicator v-if="props.ticket.assignee" :user="props.ticket.assignee" />
+        <UserIndicator v-if="props.ticket.assignee" :user="props.ticket.assignee" isClickDisabled />
       </div>
       <StatusIndicator :status="ticket.status" />
     </div>

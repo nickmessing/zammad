@@ -1,45 +1,26 @@
 <script setup lang="ts">
-import { computedEager, useScroll } from '@vueuse/core'
-import { computed, ref } from 'vue'
+import { computedEager } from '@vueuse/shared'
+import { computed, ref, watchEffect } from 'vue'
 
+import { useDragReorder } from '@/components/atoms/composition/common/useDragReorder'
+import { useCreateTicketStatus } from '@/components/organisms/composition/apollo/ticketStatus/useCreateTicketStatus'
+import { useUpdateStatusesOrder } from '@/components/organisms/composition/apollo/ticketStatus/useUpdateStatusesOrder'
 import NewStatusColumn from '@/components/organisms/status/NewStatusColumn.vue'
 import StatusTicketsColumn from '@/components/organisms/status/StatusTicketsColumn.vue'
 import HorizontalScrollableLayout from '@/components/templates/HorizontalScrollableLayout.vue'
-import { useTicketStatusesQuery, useUpdateStatusesOrderMutation } from '@/generated/graphql'
+import { useTicketStatusesQuery } from '@/generated/graphql'
+import { useUserStore } from '@/stores/user'
 
-import type { Coordinates } from '@/types/common'
-
-// Would be better to get these values from the CSS, or sync somehow, but I'm too lazy to do that today.
-const COLUMN_WIDTH = 384
-const COLUMN_GAP = 32
-const LATERAL_SPACING = 32
-
-const layoutReference = ref<{ element: HTMLDivElement }>()
-const { x } = useScroll(() => layoutReference.value?.element)
+const userStore = useUserStore()
 
 const { result: ticketStatusesFullQueryResult } = useTicketStatusesQuery()
-const { mutate: updateStatusesOrder } = useUpdateStatusesOrderMutation({
-  optimisticResponse: variables => ({
-    updateStatusesOrder: orderedStatuses.value
-      .toSorted((a, b) => {
-        const orderA = variables.ids.indexOf(a.id)
-        const orderB = variables.ids.indexOf(b.id)
-
-        return orderA - orderB
-      })
-      .map((status, index) => ({
-        ...status,
-        order: index,
-      })),
-  }),
-})
-
 const orderedStatuses = computed(
   () => ticketStatusesFullQueryResult.value?.ticketStatuses.toSorted((a, b) => a.order - b.order) ?? [],
 )
 
 const nextStatusOrder = computed(() => {
   const ticketStatuses = orderedStatuses.value
+
   if (ticketStatuses.length === 0) {
     return 0
   }
@@ -47,56 +28,55 @@ const nextStatusOrder = computed(() => {
   return (orderedStatuses.value.at(-1)?.order ?? 0) + 1
 })
 
+const { updateStatusesOrder } = useUpdateStatusesOrder()
+
+const layoutReference = ref<{ element: HTMLDivElement }>()
 const draggingStatusId = ref<string>()
-const currentMouseCoordinates = ref<Coordinates>()
-
-// "Space" is the space between two columns.
-const targetSpaceIndex = computedEager(() => {
-  if (draggingStatusId.value == undefined || currentMouseCoordinates.value == undefined) {
-    return
-  }
-
-  const totalLeft = x.value - LATERAL_SPACING + currentMouseCoordinates.value.x
-
-  return Math.floor((totalLeft + COLUMN_WIDTH / 2) / (COLUMN_WIDTH + COLUMN_GAP))
-})
-
-function handleDragDocumentMouseMove(event: MouseEvent) {
-  if (draggingStatusId.value == undefined) {
-    return
-  }
-
-  currentMouseCoordinates.value = { x: event.clientX, y: event.clientY }
+const { onReorder, startDragging, targetSpaceIndex, currentMouseCoordinates } = useDragReorder(() => ({
+  isDragging: draggingStatusId.value != undefined,
+  scrollElement: layoutReference.value?.element,
+}))
+function handleDragStart(event: MouseEvent, statusId: string) {
+  draggingStatusId.value = statusId
+  startDragging(event)
 }
-function handleDragDocumentMouseUp() {
+onReorder(({ targetIndex }) => {
   const draggingStatus = orderedStatuses.value.find(status => status.id === draggingStatusId.value)
-  if (targetSpaceIndex.value != undefined && draggingStatus != undefined) {
+
+  if (draggingStatus != undefined) {
     const listWithoutOrderingStatus = orderedStatuses.value.filter(status => status.id !== draggingStatusId.value)
     const temporarilyModifiedStatus = {
       ...draggingStatus,
-      order: targetSpaceIndex.value - 0.5,
+      order: targetIndex - 0.5,
     }
     const listWithOrderingStatus = [...listWithoutOrderingStatus, temporarilyModifiedStatus].toSorted(
       (a, b) => a.order - b.order,
     )
-    void updateStatusesOrder({
-      ids: listWithOrderingStatus.map(status => status.id),
-    })
+    void updateStatusesOrder(listWithOrderingStatus.map(status => status.id))
   }
 
   draggingStatusId.value = undefined
+})
 
-  document.removeEventListener('mousemove', handleDragDocumentMouseMove)
-  document.removeEventListener('mouseup', handleDragDocumentMouseUp)
-}
+const activeStatusId = ref<string>()
+const activeStatus = computedEager(() => orderedStatuses.value.find(status => status.id === activeStatusId.value))
 
-function handleDragStart(event: MouseEvent, statusId: string) {
-  draggingStatusId.value = statusId
+watchEffect(() => {
+  if (activeStatus.value == undefined && orderedStatuses.value.length > 0) {
+    activeStatusId.value = orderedStatuses.value[0].id
+  }
+})
 
-  currentMouseCoordinates.value = { x: event.clientX, y: event.clientY }
-
-  document.addEventListener('mousemove', handleDragDocumentMouseMove)
-  document.addEventListener('mouseup', handleDragDocumentMouseUp)
+const { createTicketStatus } = useCreateTicketStatus()
+async function handleUpdateActiveStatus(value: string) {
+  if (value === 'new') {
+    const result = await createTicketStatus({ nextStatusOrder: nextStatusOrder.value })
+    if (result?.data?.createTicketStatus.id) {
+      activeStatusId.value = result.data.createTicketStatus.id
+    }
+    return
+  }
+  activeStatusId.value = value
 }
 </script>
 
@@ -105,13 +85,18 @@ function handleDragStart(event: MouseEvent, statusId: string) {
     <StatusTicketsColumn
       v-for="(ticketStatus, index) in orderedStatuses"
       :key="ticketStatus.id"
+      :class="{
+        hidden: ticketStatus.id !== activeStatusId,
+        flex: ticketStatus.id === activeStatusId,
+      }"
       :isDragging="draggingStatusId === ticketStatus.id"
       :ticketStatusId="ticketStatus.id"
       :mouseCoordinates="currentMouseCoordinates"
       :isDroppingToTheLeft="index === targetSpaceIndex"
       :isDroppingToTheRight="index + 1 === targetSpaceIndex"
       @dragStart="event => handleDragStart(event, ticketStatus.id)"
+      @updateActiveStatus="handleUpdateActiveStatus"
     />
-    <NewStatusColumn :nextStatusOrder="nextStatusOrder" />
+    <NewStatusColumn v-if="userStore.isAuthenticated" :nextStatusOrder="nextStatusOrder" class="hidden md:block" />
   </HorizontalScrollableLayout>
 </template>

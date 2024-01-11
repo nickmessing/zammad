@@ -9,9 +9,11 @@ const props = withDefaults(
   defineProps<{
     ticketStatusId: string
     isDisabled?: boolean
+    isNewStatusAnOption?: boolean
   }>(),
   {
     isDisabled: false,
+    isNewStatusAnOption: false,
   },
 )
 const emit = defineEmits<{
@@ -56,11 +58,10 @@ onClickOutside(container, () => {
 </script>
 
 <template>
-  <div v-if="ticketStatusesQueryResult?.ticketStatuses" ref="container" class="relative h-10 w-full">
+  <div v-if="ticketStatusesQueryResult?.ticketStatuses" ref="container" class="relative w-full">
     <div
       :class="{
-        'cursor-not-allowed bg-gray-200': props.isDisabled,
-        'cursor-pointer bg-white': !props.isDisabled,
+        'cursor-pointer': !props.isDisabled,
       }"
       class="flex flex-row items-center justify-start rounded-md border border-transparent p-2 hover:border-blue-300 active:border-blue-400"
       @click="handleIndicatorClick"
@@ -79,6 +80,13 @@ onClickOutside(container, () => {
         @click="() => handleOptionClick(ticketStatus.id)"
       >
         <StatusIndicator :status="ticketStatus" />
+      </div>
+      <div
+        v-if="props.isNewStatusAnOption"
+        class="flex cursor-pointer flex-row items-center justify-start rounded-md border border-transparent bg-white p-2 hover:border-blue-300 active:border-blue-400"
+        @click="() => handleOptionClick('new')"
+      >
+        Create new status
       </div>
     </div>
   </div>

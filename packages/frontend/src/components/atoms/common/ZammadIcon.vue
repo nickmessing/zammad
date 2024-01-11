@@ -20,6 +20,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
+  click: [event: MouseEvent]
   mousedown: [event: MouseEvent]
 }>()
 
@@ -36,6 +37,7 @@ const styles = computed(() => ({
     :height="props.size"
     :viewBox="props.viewBox"
     :style="styles"
+    @click="event => emit('click', event)"
     @mousedown="event => emit('mousedown', event)"
   >
     <path :d="path" />

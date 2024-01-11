@@ -102,7 +102,7 @@ watch(isLoadingSpinnerContainerVisible, isVisible => {
 </script>
 
 <template>
-  <ZammadColumn class="grow basis-0">
+  <ZammadColumn class="max-h-screen grow basis-0">
     <ZammadHeading>{{ props.ticketsType === 'created' ? 'Created' : 'Assigned' }} Tickets</ZammadHeading>
 
     <div class="flex grow flex-col gap-2 overflow-auto">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiArrowDown, mdiClose } from '@mdi/js'
+import { mdiTriangleDown, mdiClose } from '@mdi/js'
 import { useToggle, useVModel, onClickOutside } from '@vueuse/core'
 import { Tooltip } from 'floating-vue'
 import { computed, ref } from 'vue'
@@ -66,7 +66,7 @@ onClickOutside(container, () => {
     >
       <UserIndicator :user="activeUser">
         <div class="flex flex-row gap-1">
-          <Tooltip v-if="userStore && !props.isDisabled">
+          <Tooltip v-if="userStore && !props.isDisabled && activeUser != undefined">
             <ZammadIcon :path="mdiClose" class="rounded hover:bg-blue-200" @click.prevent.stop="() => (userId = '')" />
 
             <template #popper> Deselect user </template>
@@ -75,7 +75,7 @@ onClickOutside(container, () => {
           <Tooltip v-if="!props.isDisabled">
             <ZammadIcon
               v-if="!props.isDisabled"
-              :path="mdiArrowDown"
+              :path="mdiTriangleDown"
               class="rounded hover:bg-blue-200"
               @click.prevent.stop="() => togglePickerOpen(true)"
             />

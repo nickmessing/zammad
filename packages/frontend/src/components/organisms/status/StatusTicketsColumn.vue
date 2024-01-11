@@ -17,6 +17,7 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{
   dragStart: [event: MouseEvent]
+  updateActiveStatus: [ticketStatusId: string]
 }>()
 
 const columnContainerReference = ref<HTMLDivElement>()
@@ -61,16 +62,17 @@ const left = computed(() => {
       '-translate-x-8': !props.isDragging && props.isDroppingToTheRight,
       'translate-x-8': !props.isDragging && props.isDroppingToTheLeft,
     }"
-    class="flex w-96 shrink-0 grow-0 transition-transform"
+    class="w-full shrink-0 grow-0 transition-transform md:flex md:w-96"
   >
     <ZammadColumn
       :class="{ 'dragging absolute z-10 transform opacity-80': props.isDragging }"
-      class="w-96 overflow-hidden transition-opacity"
+      class="w-full overflow-hidden transition-opacity"
     >
       <StatusTicketsColumnHeading
         :isDragging="props.isDragging"
         :ticketStatusId="props.ticketStatusId"
         @dragStart="handleDragStart"
+        @updateActiveStatus="value => emit('updateActiveStatus', value)"
       />
       <StatusTicketList :ticketStatusId="props.ticketStatusId" />
     </ZammadColumn>

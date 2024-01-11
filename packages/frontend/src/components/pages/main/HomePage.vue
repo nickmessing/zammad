@@ -15,8 +15,8 @@ const toggleExerciseVisibility = (exercise: keyof (typeof exerciseVisibilityStat
 </script>
 
 <template>
-  <div class="flex grow flex-row justify-center">
-    <div class="mt-10 max-w-md justify-center">
+  <div class="flex grow flex-row justify-center p-4 text-center">
+    <div class="mt-6 max-w-md justify-center">
       <h1 class="text-3xl font-extrabold leading-10 tracking-tight">Ready for the challenge?</h1>
       <div class="mt-8">
         <section>
